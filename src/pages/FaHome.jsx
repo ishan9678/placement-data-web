@@ -48,10 +48,10 @@ const FaHome = () => {
                     action={() => navigate("/view-placed-student-details")}
                   />
                   <OptionCard
-                    title="Student Details"
-                    description="Click here to add or edit student details."
+                    title="View Consilidated Report"
+                    description="Click here to view the consolidated report for your students"
                     imageUrl={EditStudentImage}
-                    action={() => navigate("/student-details")}
+                    action={() => navigate("/fa-consolidated-report")}
                   />
                 </div>
               </>

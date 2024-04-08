@@ -19,6 +19,8 @@ function ViewAllPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
   const [facultyAdvisors, setFacultyAdvisors] = useState([]);
   const [selectedAdvisor, setSelectedAdvisor] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
     // Fetch faculty advisors
@@ -35,18 +37,38 @@ function ViewAllPlacedStudents() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
+
+    // Fetch companies
+    fetch(`${api_url}server/get_companies.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setCompanies(data.companies);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
   }, []);
 
-  const handleAdvisorChange = (event) => {
-    setSelectedAdvisor(event.target.value);
-    // Fetch placed students of selected advisor
-    fetch(
-      `${api_url}server/get_placed_student_details.php?advisor=${event.target.value}`,
-      {
-        method: "GET",
-        credentials: "include",
+  const fetchPlacedStudents = (advisor, company) => {
+    let url = `${api_url}server/get_placed_student_details.php?`;
+    if (advisor) {
+      url += `advisor=${advisor}`;
+      if (company) {
+        url += `&company=${company}`;
       }
-    )
+    } else if (company) {
+      url += `company=${company}`;
+    }
+
+    fetch(url, {
+      method: "GET",
+      credentials: "include",
+    })
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
@@ -58,21 +80,70 @@ function ViewAllPlacedStudents() {
       .catch((error) => console.error("Fetch error:", error));
   };
 
+  const handleAdvisorChange = (event) => {
+    const advisor = event.target.value;
+    setSelectedAdvisor(advisor);
+    fetchPlacedStudents(advisor, selectedCompany);
+  };
+
+  const handleCompanyChange = (event) => {
+    const company = event.target.value;
+    setSelectedCompany(company);
+    fetchPlacedStudents(selectedAdvisor, company); // Pass selectedAdvisor here
+  };
+
   return (
     <div>
       <Navbar />
-      <div style={{ overflow: "auto", maxHeight: "700px" }}>
+      <div style={{ maxHeight: "720px", marginTop: "100px" }}>
         <h2>Placed Students In All Branches</h2>
-        <FormControl style={{ minWidth: 220 }}>
-          <InputLabel>Select Faculty Advisor</InputLabel>
-          <Select value={selectedAdvisor} onChange={handleAdvisorChange}>
-            {facultyAdvisors.map((advisor) => (
-              <MenuItem key={advisor.id} value={advisor.name}>
-                {advisor.name}
+        <div style={{ display: "flex" }}>
+          <FormControl style={{ minWidth: 220, marginRight: "10px" }}>
+            <InputLabel>Select Faculty Advisor</InputLabel>
+            <Select
+              value={selectedAdvisor}
+              onChange={handleAdvisorChange}
+              style={{ color: "black" }}
+            >
+              <MenuItem value="">
+                {" "}
+                <em>None</em>
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              {facultyAdvisors.map((advisor) => (
+                <MenuItem
+                  key={advisor.id}
+                  value={advisor.name}
+                  style={{ color: "black" }}
+                >
+                  {advisor.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl style={{ minWidth: 220 }}>
+            <InputLabel>Select Company</InputLabel>
+            <Select
+              value={selectedCompany}
+              onChange={handleCompanyChange}
+              style={{ color: "black" }}
+            >
+              <MenuItem value="">
+                {" "}
+                <em>None</em>
+              </MenuItem>
+              {companies.map((company) => (
+                <MenuItem
+                  key={company}
+                  value={company}
+                  style={{ color: "black" }}
+                >
+                  {company}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
 
         <TableContainer component={Paper}>
           <Table>

@@ -8,21 +8,21 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import api_url from "../apiconfig";
 
-function StudentStatistics() {
+function StudentStatistics({ apiUrl }) {
   const [statistics, setStatistics] = useState({});
 
   useEffect(() => {
-    fetch(`${api_url}server/get_student_statistics.php`, {
+    fetch(apiUrl, {
       method: "GET",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
         setStatistics(data);
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [apiUrl]);
 
   return (
     <div style={{ maxWidth: "80%", margin: "0 auto" }}>

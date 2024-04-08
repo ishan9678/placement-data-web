@@ -43,7 +43,7 @@ const PlacementCoordinatorHome = () => {
                     title="Add Placed Student Details"
                     description="Click here to add details of newly placed students."
                     imageUrl={PlacedStudentImage}
-                    action={() => navigate("/add-placed-student-details")}
+                    action={() => navigate("/student-details")}
                   />
                   <OptionCard
                     title="View Placed Student Details"

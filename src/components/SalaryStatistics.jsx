@@ -10,12 +10,13 @@ import {
 } from "@mui/material";
 import api_url from "../apiconfig";
 
-function SalaryStatistics() {
+function SalaryStatistics({ apiUrl }) {
   const [statistics, setStatistics] = useState({});
 
   useEffect(() => {
-    fetch(`${api_url}server/get_salary_statistics.php`, {
+    fetch(apiUrl, {
       method: "GET",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api_url from "../apiconfig";
+import BackButton from "./BackButton";
 import "../styles/navbar.css";
 
 const Navbar = () => {
@@ -59,10 +60,10 @@ const Navbar = () => {
               Placed Student Details
             </li>
             <li
-              onClick={() => handleMenuClick("/add-student-details")}
+              onClick={() => handleMenuClick("/student-details")}
               style={{ cursor: "pointer" }}
             >
-              Student Details
+              View Consolidated Report
             </li>
           </>
         );
@@ -135,9 +136,12 @@ const Navbar = () => {
   return (
     <nav className="navbar" style={{ backgroundColor: "#1565c0" }}>
       <ul>
+        <li className="left-end">
+          <BackButton />
+        </li>
         {renderMenuItems()}
         <li
-          className="logout"
+          className="logout right-end"
           onClick={handleLogout}
           style={{ cursor: "pointer" }}
         >

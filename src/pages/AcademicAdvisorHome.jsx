@@ -28,74 +28,72 @@ const AcademicAdvisorHome = () => {
   }, []);
 
   return (
-    <div className="container">
-      <Card className="mainCard">
-        <CardContent>
-          {user !== null ? (
-            <>
-              <Typography variant="h5" component="div" gutterBottom>
-                {`Welcome, ${user}!`}
-              </Typography>
-              <div className="optionsContainer">
-                <OptionCard
-                  title="View Placed Student Details"
-                  description="Click here to view details of placed students."
-                  imageUrl={PlacedStudentImage}
-                  action={() => navigate("/view-branch-placed-students")}
-                />
-                <OptionCard
-                  title="View Consolidated Report"
-                  description="Click here to view the consolidated report."
-                  imageUrl={PlacedStudentImage}
-                  action={() => navigate("/branch-consolidated-report")}
-                />
-              </div>
-            </>
-          ) : (
-            <ClipLoader
-              size={150}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <Navbar />
+      <div className="container">
+        <Card className="mainCard">
+          <CardContent>
+            {user !== null ? (
+              <>
+                <Typography variant="h5" component="div" gutterBottom>
+                  {`Welcome, ${user}!`}
+                </Typography>
+                <div className="optionsContainer">
+                  <OptionCard
+                    title="View Placed Student Details"
+                    description="Click here to view details of placed students."
+                    imageUrl={PlacedStudentImage}
+                    action={() => navigate("/view-branch-placed-students")}
+                  />
+                  <OptionCard
+                    title="View Consolidated Report"
+                    description="Click here to view the consolidated report."
+                    imageUrl={PlacedStudentImage}
+                    action={() => navigate("/branch-consolidated-report")}
+                  />
+                </div>
+              </>
+            ) : (
+              <ClipLoader
+                size={150}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 
 const OptionCard = ({ title, description, imageUrl, action }) => {
   return (
-    <div>
-      <Navbar />
-      <div>
-        <Card className="optionCard">
-          <CardContent>
-            <Typography variant="h6" component="div" gutterBottom>
-              {title}
-            </Typography>
-            <img
-              src={imageUrl}
-              alt={title}
-              className="cardImage"
-              style={{ marginTop: "20px" }}
-            />
-            <Typography variant="body2" color="text.secondary">
-              {description}
-            </Typography>
-            <Button
-              onClick={action}
-              variant="contained"
-              color="primary"
-              className="button"
-              style={{ marginTop: "20px" }}
-            >
-              Go
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <Card className="optionCard">
+      <CardContent>
+        <Typography variant="h6" component="div" gutterBottom>
+          {title}
+        </Typography>
+        <img
+          src={imageUrl}
+          alt={title}
+          className="cardImage"
+          style={{ marginTop: "20px" }}
+        />
+        <Typography variant="body2" color="text.secondary">
+          {description}
+        </Typography>
+        <Button
+          onClick={action}
+          variant="contained"
+          color="primary"
+          className="button"
+          style={{ marginTop: "20px" }}
+        >
+          Go
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 

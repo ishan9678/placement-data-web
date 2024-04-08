@@ -8,14 +8,14 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import api_url from "../apiconfig";
 
-function MarqueeStudents() {
+function MarqueeStudents({ apiUrl }) {
   const [marqueeStudents, setMarqueeStudents] = useState([]);
 
   useEffect(() => {
-    fetch(`${api_url}server/get_marquee_students.php`, {
+    fetch(apiUrl, {
       method: "GET",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -26,7 +26,7 @@ function MarqueeStudents() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [apiUrl]);
 
   return (
     <div>

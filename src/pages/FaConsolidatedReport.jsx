@@ -6,8 +6,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button,
   Paper,
+  Button,
 } from "@mui/material";
 import {
   BarChart,
@@ -25,11 +25,12 @@ import MarqueeStudents from "../components/MarqueeStudents";
 import StudentStatistics from "../components/StudentStatistics";
 import SalaryStatistics from "../components/SalaryStatistics";
 import Navbar from "../components/Navbar";
-import api_url from "../apiconfig";
-import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
+import api_url from "../apiconfig";
 
-function ConsolidatedReport() {
+function FaConsolidatedReport() {
+  const [specialization, setSpecialization] = useState(null);
+  const [section, setSection] = useState(null);
   const [consolidatedReport, setConsolidatedReport] = useState([]);
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
@@ -44,9 +45,27 @@ function ConsolidatedReport() {
   });
 
   useEffect(() => {
-    // Fetch consolidated report data
-    fetch(`${api_url}server/get_consolidated_report.php`, {
+    fetch(`${api_url}server/get_user_info.php`, {
       method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setSpecialization(data.specialization);
+          setSection(data.section);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, []);
+
+  useEffect(() => {
+    // Fetch consolidated report data
+    fetch(`${api_url}server/get_fa_consolidated_report.php`, {
+      method: "GET",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -110,7 +129,8 @@ function ConsolidatedReport() {
   });
 
   return (
-    <div>
+    <>
+      {" "}
       <Navbar />
       <div
         ref={componentRef}
@@ -118,7 +138,7 @@ function ConsolidatedReport() {
       >
         <div>
           <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
-            Consolidated Report For All Students
+            Consolidated Report for {specialization} {section} section
           </h2>
           {/* table 1 */}
           <TableContainer component={Paper}>
@@ -254,12 +274,12 @@ function ConsolidatedReport() {
 
           {/*Salary*/}
           <SalaryCategorisation
-            apiUrl={`${api_url}server/get_salary_categorisation.php`}
+            apiUrl={`${api_url}server/get_fa_salary_categorisation.php`}
           />
 
           {/*Marquee*/}
           <MarqueeStudents
-            apiUrl={`${api_url}/server/get_marquee_students.php`}
+            apiUrl={`${api_url}/server/get_fa_marquee_students.php`}
           />
 
           {/*Offer Summary*/}
@@ -361,31 +381,31 @@ function ConsolidatedReport() {
           </div>
           {/* Student Statistics */}
           <StudentStatistics
-            apiUrl={`${api_url}server/get_student_statistics.php`}
+            apiUrl={`${api_url}server/get_fa_student_statistics.php`}
           />
           {/*Salary Statistics */}
           <SalaryStatistics
-            apiUrl={`${api_url}server/get_salary_statistics.php`}
+            apiUrl={`${api_url}server/get_fa_salary_statistics.php`}
           />
+          <Button
+            className="print-button"
+            style={{
+              margin: "2rem",
+              backgroundColor: "#1565c0",
+              color: "white",
+              fontWeight: "700",
+              borderRadius: "20px",
+              padding: "10px 20px",
+              zIndex: 100,
+            }}
+            onClick={handlePrint}
+          >
+            Print as PDF
+          </Button>
         </div>
-        <Button
-          className="print-button"
-          style={{
-            margin: "2rem",
-            backgroundColor: "#1565c0",
-            color: "white",
-            fontWeight: "700",
-            borderRadius: "20px",
-            padding: "10px 20px",
-            zIndex: 100,
-          }}
-          onClick={handlePrint}
-        >
-          Print as PDF
-        </Button>
       </div>
-    </div>
+    </>
   );
 }
 
-export default ConsolidatedReport;
+export default FaConsolidatedReport;

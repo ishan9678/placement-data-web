@@ -7,22 +7,24 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/signup.css";
 import api_url from "../apiconfig";
 import srm_logo from "../assets/srm_logo.png";
 
-const Signup = () => {
+const AdditionalDetails = () => {
+  const location = useLocation();
   const navigate = useNavigate();
 
+  const { name, email } = location.state;
+
   const [formData, setFormData] = useState({
-    name: "",
+    name: name,
+    emailId: email,
     employeeId: "",
-    emailId: "",
     role: "",
     specialization: "",
     batch: "",
-    password: "",
     section: "",
   });
 
@@ -36,24 +38,15 @@ const Signup = () => {
 
     // Basic validation
     if (
-      !formData.name ||
       !formData.employeeId ||
-      !formData.emailId ||
       !formData.role ||
       !formData.specialization ||
       !formData.batch ||
-      !formData.password
+      !formData.section
     ) {
       console.error("All fields are required");
       return;
     }
-
-    if (!formData.emailId.endsWith("@srmist.edu.in")) {
-      alert("Only SRMIST emails are allowed.");
-      return;
-    }
-
-    console.log(formData);
 
     try {
       const response = await fetch(`${api_url}server/process_signup.php`, {
@@ -90,7 +83,17 @@ const Signup = () => {
             label="Name"
             name="name"
             value={formData.name}
-            onChange={handleChange}
+            disabled
+            fullWidth
+            required
+            margin="normal"
+            className="form-control"
+          />
+          <TextField
+            label="Email ID"
+            name="emailId"
+            value={formData.emailId}
+            disabled
             fullWidth
             required
             margin="normal"
@@ -106,16 +109,6 @@ const Signup = () => {
             margin="normal"
             className="form-control"
           />
-          <TextField
-            label="Email ID"
-            name="emailId"
-            value={formData.emailId}
-            onChange={handleChange}
-            fullWidth
-            required
-            margin="normal"
-            className="form-control"
-          />
           <FormControl fullWidth margin="normal" className="form-control">
             <InputLabel htmlFor="role">Role</InputLabel>
             <Select
@@ -124,29 +117,18 @@ const Signup = () => {
               onChange={handleChange}
               required
               label="Role"
-              style={{ color: "black" }}
             >
-              <MenuItem value="Faculty Advisor" style={{ color: "black" }}>
-                Faculty Advisor
-              </MenuItem>
-              <MenuItem value="HOD" style={{ color: "black" }}>
-                HOD
-              </MenuItem>
-              <MenuItem value="Academic Advisor" style={{ color: "black" }}>
-                Academic Advisor
-              </MenuItem>
-              <MenuItem
-                value="Placement Coordinator"
-                style={{ color: "black" }}
-              >
+              <MenuItem value="Faculty Advisor">Faculty Advisor</MenuItem>
+              <MenuItem value="HOD">HOD</MenuItem>
+              <MenuItem value="Academic Advisor">Academic Advisor</MenuItem>
+              <MenuItem value="Placement Coordinator">
                 Placement Coordinator
               </MenuItem>
-              <MenuItem value="Program Coordinator" style={{ color: "black" }}>
+              <MenuItem value="Program Coordinator">
                 Program Coordinator
               </MenuItem>
             </Select>
           </FormControl>
-
           <FormControl fullWidth margin="normal" className="form-control">
             <InputLabel htmlFor="specialization">Specialization</InputLabel>
             <Select
@@ -155,23 +137,13 @@ const Signup = () => {
               onChange={handleChange}
               required
               label="Specialization"
-              style={{ color: "black" }}
             >
-              <MenuItem value="AI" style={{ color: "black" }}>
-                AI
-              </MenuItem>
-              <MenuItem value="AIML" style={{ color: "black" }}>
-                AI/ML
-              </MenuItem>
-              <MenuItem value="SWE" style={{ color: "black" }}>
-                SWE
-              </MenuItem>
-              <MenuItem value="NA" style={{ color: "black" }}>
-                NA
-              </MenuItem>
+              <MenuItem value="AI">AI</MenuItem>
+              <MenuItem value="AIML">AI/ML</MenuItem>
+              <MenuItem value="SWE">SWE</MenuItem>
+              <MenuItem value="NA">NA</MenuItem>
             </Select>
           </FormControl>
-
           <FormControl fullWidth margin="normal" className="form-control">
             <InputLabel htmlFor="batch">Batch</InputLabel>
             <Select
@@ -180,20 +152,14 @@ const Signup = () => {
               onChange={handleChange}
               required
               label="Batch"
-              style={{ color: "black" }}
             >
               {[...Array(2051 - 2022).keys()].map((year) => (
-                <MenuItem
-                  key={2022 + year}
-                  value={2022 + year}
-                  style={{ color: "black" }}
-                >
+                <MenuItem key={2022 + year} value={2022 + year}>
                   {2022 + year}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-
           {formData.role === "Faculty Advisor" && (
             <TextField
               label="Section"
@@ -206,17 +172,6 @@ const Signup = () => {
               className="form-control"
             />
           )}
-          <div className="form-control">
-            <TextField
-              label="Password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </div>
           <div className="button-container">
             <Button
               type="submit"
@@ -232,4 +187,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default AdditionalDetails;

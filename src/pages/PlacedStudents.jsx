@@ -155,12 +155,23 @@ function PlacedStudents() {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
+                  style={{ color: "black" }}
                 >
-                  <MenuItem value="marquee">Marquee</MenuItem>
-                  <MenuItem value="superDream">Super Dream</MenuItem>
-                  <MenuItem value="dream">Dream</MenuItem>
-                  <MenuItem value="daySharing">Day Sharing</MenuItem>
-                  <MenuItem value="internship">Internship</MenuItem>
+                  <MenuItem value="marquee" style={{ color: "black" }}>
+                    Marquee
+                  </MenuItem>
+                  <MenuItem value="superDream" style={{ color: "black" }}>
+                    Super Dream
+                  </MenuItem>
+                  <MenuItem value="dream" style={{ color: "black" }}>
+                    Dream
+                  </MenuItem>
+                  <MenuItem value="daySharing" style={{ color: "black" }}>
+                    Day Sharing
+                  </MenuItem>
+                  <MenuItem value="internship" style={{ color: "black" }}>
+                    Internship
+                  </MenuItem>
                 </Select>
               </FormControl>
               <TextField
@@ -182,12 +193,17 @@ function PlacedStudents() {
                   name="facultyAdvisorName"
                   value={formData.facultyAdvisorName}
                   onChange={handleChange}
+                  style={{ color: "black" }}
                 >
-                  <MenuItem disabled value="">
+                  <MenuItem disabled value="" style={{ color: "black" }}>
                     <em>Select Faculty Advisor</em>
                   </MenuItem>
                   {facultyAdvisors.map((advisor) => (
-                    <MenuItem key={advisor.id} value={advisor.name}>
+                    <MenuItem
+                      key={advisor.id}
+                      value={advisor.name}
+                      style={{ color: "black" }}
+                    >
                       {advisor.name}
                     </MenuItem>
                   ))}

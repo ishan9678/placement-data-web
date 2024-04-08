@@ -78,13 +78,17 @@ function ViewBranchPlacedStudents() {
   return (
     <div>
       <Navbar />
-      <div>
+      <div style={{ maxHeight: "720px", marginTop: "200px" }}>
         <h2>Placed Students In {branch}</h2>
         <FormControl style={{ minWidth: 220 }}>
           <InputLabel>Select Faculty Advisor</InputLabel>
           <Select value={selectedAdvisor} onChange={handleAdvisorChange}>
             {facultyAdvisors.map((advisor) => (
-              <MenuItem key={advisor.id} value={advisor.name}>
+              <MenuItem
+                key={advisor.id}
+                value={advisor.name}
+                style={{ color: "black" }}
+              >
                 {advisor.name}
               </MenuItem>
             ))}

@@ -7,7 +7,6 @@ import FaHome from "./pages/FaHome";
 import PlacedStudents from "./pages/PlacedStudents";
 import ViewPlacedStudents from "./pages/ViewPlacedStudents";
 import ViewAllPlacedStudents from "./pages/viewAllPlacedStudents";
-import StudentDetails from "./pages/StudentDetails";
 import ConsolidatedReport from "./pages/ConsolidatedReport";
 import PlacementCoordinatorHome from "./pages/PlacementCoordinatorHome";
 import HodHome from "./pages/HodHome";
@@ -17,6 +16,13 @@ import BranchConsolidatedReport from "./pages/BranchConsolidatedReport";
 import api_url from "./apiconfig";
 import AdminDashboard from "./pages/AdminDashboard";
 import ResetPassword from "./pages/ResetPassword";
+import StudentDetailss from "./pages/StudentDetailss";
+import { gapi } from "gapi-script";
+import AdditionalDetails from "./pages/AdditionalDetails";
+import AddPlacedStudents from "./pages/AddPlacedStudents";
+import FaConsolidatedReport from "./pages/FaConsolidatedReport";
+const clientId =
+  "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
 
 const App = () => {
   const [userRole, setUserRole] = useState(null);
@@ -34,6 +40,16 @@ const App = () => {
       })
       .catch((error) => console.error("Fetch error:", error));
   }, []);
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: "",
+      });
+    }
+    gapi.load("client: auth2", start);
+  });
 
   const renderHomeRoute = () => {
     if (userRole === "Admin") {
@@ -73,13 +89,18 @@ const App = () => {
           path="/add-placed-student-details"
           element={<PlacedStudents />}
         />
-        <Route path="/student-details" element={<StudentDetails />} />
+        <Route path="/student-details" element={<AddPlacedStudents />} />
         <Route
           path="/branch-consolidated-report"
           element={<BranchConsolidatedReport />}
         />
+        <Route
+          path="/fa-consolidated-report"
+          element={<FaConsolidatedReport />}
+        />
         <Route path="/consolidated-report" element={<ConsolidatedReport />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/additional-details" element={<AdditionalDetails />} />
       </Routes>
     </Router>
   );

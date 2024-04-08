@@ -20,12 +20,13 @@ import {
 } from "recharts";
 import api_url from "../apiconfig";
 
-function SalaryCategorisation() {
+function SalaryCategorisation({ apiUrl }) {
   const [salaryCategorisation, setSalaryCategorisation] = useState({});
 
   useEffect(() => {
-    fetch(`${api_url}server/get_salary_categorisation.php`, {
+    fetch(apiUrl, {
       method: "GET",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -38,6 +39,7 @@ function SalaryCategorisation() {
     let totalCount = 0;
     Object.values(salaryCategorisation).forEach((count) => {
       totalCount += parseInt(count);
+      console.log("total count", totalCount);
     });
     return totalCount;
   };

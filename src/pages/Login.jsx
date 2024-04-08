@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { TextField, Button, Modal, Box } from "@mui/material";
 import srm_logo from "../assets/srm_logo.png";
 import api_url from "../apiconfig";
+import { GoogleLogin } from "react-google-login";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -54,13 +55,11 @@ const Login = () => {
     console.log("Login Data:", loginData);
   };
 
-  // State for reset password modal
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleResetPassword = async () => {
-    // Use the resetEmail state value instead of prompt
     const email = resetEmail.trim();
     if (!email) {
       alert("Please enter your email");
@@ -95,6 +94,48 @@ const Login = () => {
 
   const handleEmailChange = (event) => {
     setResetEmail(event.target.value);
+  };
+
+  const onSuccess = async (res) => {
+    console.log("LOGIN SUCCESS! Current user: ", res.profileObj);
+    console.log(res.profileObj.email);
+    const email = res.profileObj.email;
+
+    try {
+      const response = await fetch(`${api_url}server/check_email.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({ email }).toString(),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (response.ok) {
+        if (data.status === "success") {
+          navigate("/home");
+        } else if (data.requiresAdditionalDetails) {
+          navigate("/additional-details", {
+            state: {
+              name: res.profileObj.givenName,
+              email: res.profileObj.email,
+            },
+          });
+        } else {
+          console.error("Error:", data.message);
+        }
+      } else {
+        console.error("Error:", data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const onFailure = (res) => {
+    console.log("LOGIN FAILED! res:", res);
   };
 
   return (
@@ -139,12 +180,7 @@ const Login = () => {
         </div>
       </form>
       <div style={{ textAlign: "center", marginTop: "1rem" }}>
-        <Button
-          onClick={() => {
-            navigate("/signup");
-          }}
-          variant="outlined"
-        >
+        <Button onClick={() => navigate("/signup")} variant="outlined">
           Register
         </Button>
         <Button
@@ -155,8 +191,20 @@ const Login = () => {
           Reset Password
         </Button>
       </div>
-
-      {/* Reset Password Modal */}
+      <div style={{ textAlign: "center", marginTop: "1rem", color: "#337ab7" }}>
+        <p>Or</p>
+        <div id="signInButton">
+          <GoogleLogin
+            clientId="932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com"
+            buttonText="Continue With Google"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            cookiePolicy="single_host_origin"
+            isSignedIn={false}
+            scope="email profile"
+          />
+        </div>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}

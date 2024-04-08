@@ -15,7 +15,24 @@ import api_url from "../apiconfig";
 
 function ViewPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
+  const [facultyAdvisorName, setFacultyAdvisorName] = useState(null);
   const [fileStates, setFileStates] = useState([]);
+
+  useEffect(() => {
+    fetch(`${api_url}server/get_user_info.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setFacultyAdvisorName(data.name);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, []);
 
   useEffect(() => {
     // Fetch consolidated report data
@@ -26,10 +43,13 @@ function ViewPlacedStudents() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          setPlacedStudents(data.students);
+          const filteredStudents = data.students.filter(
+            (student) => student.facultyAdvisor === facultyAdvisorName
+          );
+          setPlacedStudents(filteredStudents);
 
           // Set initial state for fileStates after placedStudents is populated
-          const initialFileStates = data.students.map((student) => ({
+          const initialFileStates = filteredStudents.map((student) => ({
             selected: !!student.file,
             fileName: student.file ? student.file.split("/")[1] : "",
             file: null,
@@ -40,12 +60,16 @@ function ViewPlacedStudents() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [facultyAdvisorName]);
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
     const newFileStates = [...fileStates];
-    newFileStates[index] = { selected: true, fileName: file.name, file: file };
+    newFileStates[index] = {
+      selected: true,
+      fileName: file.name,
+      file: file,
+    };
     setFileStates(newFileStates);
 
     // Create a new FormData instance
@@ -69,10 +93,10 @@ function ViewPlacedStudents() {
   };
 
   return (
-    <div>
+    <div style={{ maxHeight: "720px", marginTop: "200px" }}>
       <Navbar />
       <div>
-        <h2>Placed Students</h2>
+        <h2 style={{ textAlign: "center" }}>Placed Students Details</h2>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>

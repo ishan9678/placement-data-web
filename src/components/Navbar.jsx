@@ -71,7 +71,7 @@ const Navbar = () => {
         return (
           <>
             <li
-              onClick={() => handleMenuClick("/add-placed-student-details")}
+              onClick={() => handleMenuClick("/student-details")}
               style={{ cursor: "pointer" }}
             >
               Add Placed Student Details

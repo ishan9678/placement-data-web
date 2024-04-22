@@ -8,6 +8,10 @@ import {
   TableRow,
   Button,
   Paper,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import {
   BarChart,
@@ -31,6 +35,8 @@ import { useReactToPrint } from "react-to-print";
 
 function ConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
+  const [batch, setBatch] = useState(2025);
+  const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
     marquee: 0,
@@ -45,7 +51,7 @@ function ConsolidatedReport() {
 
   useEffect(() => {
     // Fetch consolidated report data
-    fetch(`${api_url}server/get_consolidated_report.php`, {
+    fetch(`${api_url}server/get_consolidated_report.php?batch=${batch}`, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -53,12 +59,16 @@ function ConsolidatedReport() {
         if (data.status === "success") {
           setConsolidatedReport(data.consolidatedReport);
           calculateTotal(data.consolidatedReport);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
         } else {
           console.error("Error:", data.message);
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [batch]);
 
   const calculateTotal = (data) => {
     let newTotal = {
@@ -109,6 +119,10 @@ function ConsolidatedReport() {
     content: () => componentRef.current,
   });
 
+  const handleBatchChange = (event) => {
+    setBatch(event.target.value);
+  };
+
   return (
     <div>
       <Navbar />
@@ -116,10 +130,36 @@ function ConsolidatedReport() {
         ref={componentRef}
         style={{ maxHeight: "720px", marginTop: "200px" }}
       >
+        {/* select batch */}
         <div>
-          <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h2 style={{ textAlign: "center" }}>
             Consolidated Report For All Students
           </h2>
+          <div>
+            <FormControl className="form-control">
+              <InputLabel htmlFor="batch">Batch</InputLabel>{" "}
+              <Select
+                name="batch"
+                label="batch"
+                id="batch"
+                value={batch}
+                defaultValue={2025}
+                onChange={handleBatchChange}
+                style={{ color: "black", minWidth: 120, marginBottom: "20px" }} // Adjust minWidth as needed
+              >
+                {[...Array(2051 - 2022).keys()].map((year) => (
+                  <MenuItem
+                    key={2022 + year}
+                    value={2022 + year}
+                    style={{ color: "black" }}
+                  >
+                    {2022 + year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+
           {/* table 1 */}
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
@@ -253,14 +293,19 @@ function ConsolidatedReport() {
           </TableContainer>
 
           {/*Salary*/}
-          <SalaryCategorisation
-            apiUrl={`${api_url}server/get_salary_categorisation.php`}
-          />
+
+          {shouldRender && (
+            <SalaryCategorisation
+              apiUrl={`${api_url}server/get_salary_categorisation.php?batch=${batch}`}
+            />
+          )}
 
           {/*Marquee*/}
-          <MarqueeStudents
-            apiUrl={`${api_url}/server/get_marquee_students.php`}
-          />
+          {shouldRender && (
+            <MarqueeStudents
+              apiUrl={`${api_url}/server/get_marquee_students.php?batch=${batch}`}
+            />
+          )}
 
           {/*Offer Summary*/}
           <div style={{ maxWidth: "50%", margin: "0 auto" }}>
@@ -360,13 +405,18 @@ function ConsolidatedReport() {
             </ResponsiveContainer>
           </div>
           {/* Student Statistics */}
-          <StudentStatistics
-            apiUrl={`${api_url}server/get_student_statistics.php`}
-          />
+          {shouldRender && (
+            <StudentStatistics
+              apiUrl={`${api_url}server/get_student_statistics.php?batch=${batch}`}
+            />
+          )}
+
           {/*Salary Statistics */}
-          <SalaryStatistics
-            apiUrl={`${api_url}server/get_salary_statistics.php`}
-          />
+          {shouldRender && (
+            <SalaryStatistics
+              apiUrl={`${api_url}server/get_salary_statistics.php?batch=${batch}`}
+            />
+          )}
         </div>
         <Button
           className="print-button"

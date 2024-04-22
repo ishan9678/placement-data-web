@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import PlacedStudentImage from "../assets/placed.svg";
-import { ClipLoader } from "react-spinners";
+import EditStudentImage from "../assets/student_details.svg";
 import Navbar from "../components/Navbar";
+import ClipLoader from "react-spinners/ClipLoader";
 import api_url from "../apiconfig";
 import "../styles/home.css";
 
-const HodHome = () => {
+const AdminHome = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const HodHome = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
+          console.log("User's Name:", data.name);
           setUser(data.name);
         } else {
           console.error("Error:", data.message);
@@ -28,39 +30,41 @@ const HodHome = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div>
       <Navbar />
-      <Card className="mainCard">
-        <CardContent>
-          {user !== null ? (
-            <>
-              <Typography variant="h5" component="div" gutterBottom>
-                {`Welcome, ${user}!`}
-              </Typography>
-              <div className="optionsContainer">
-                <OptionCard
-                  title="View Placed Student Details"
-                  description="Click here to view details of placed students."
-                  imageUrl={PlacedStudentImage}
-                  action={() => navigate("/view-all-placed-student-details")}
-                />
-                <OptionCard
-                  title="View Consolidated Report"
-                  description="Click here to view the consolidated report."
-                  imageUrl={PlacedStudentImage}
-                  action={() => navigate("/consolidated-report")}
-                />
-              </div>
-            </>
-          ) : (
-            <ClipLoader
-              size={150}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          )}
-        </CardContent>
-      </Card>
+      <div className="container">
+        <Card className="mainCard">
+          <CardContent>
+            {user !== null ? (
+              <>
+                <Typography variant="h5" component="div" gutterBottom>
+                  {`Welcome, ${user}!`}
+                </Typography>
+                <div className="optionsContainer">
+                  <OptionCard
+                    title="Approve Users"
+                    description="Click here to aprrove users"
+                    imageUrl={PlacedStudentImage}
+                    action={() => navigate("/approve-users")}
+                  />
+                  <OptionCard
+                    title="Add students"
+                    description="Click here to add students"
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/add-students")}
+                  />
+                </div>
+              </>
+            ) : (
+              <ClipLoader
+                size={150}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
@@ -95,4 +99,4 @@ const OptionCard = ({ title, description, imageUrl, action }) => {
   );
 };
 
-export default HodHome;
+export default AdminHome;

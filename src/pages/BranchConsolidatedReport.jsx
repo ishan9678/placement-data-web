@@ -8,6 +8,10 @@ import {
   TableRow,
   Paper,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   BarChart,
@@ -30,7 +34,10 @@ import api_url from "../apiconfig";
 
 function BranchConsolidatedReport() {
   const [specialization, setSpecialization] = useState(null);
+  const [role, setRole] = useState("");
+  const [batch, setBatch] = useState();
   const [consolidatedReport, setConsolidatedReport] = useState([]);
+  const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
     marquee: 0,
@@ -52,6 +59,8 @@ function BranchConsolidatedReport() {
       .then((data) => {
         if (data.status === "success") {
           setSpecialization(data.specialization);
+          setRole(data.role);
+          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }
@@ -61,21 +70,28 @@ function BranchConsolidatedReport() {
 
   useEffect(() => {
     // Fetch consolidated report data
-    fetch(`${api_url}server/get_branch_consolidated_report.php`, {
-      method: "GET",
-      credentials: "include",
-    })
+    fetch(
+      `${api_url}server/get_branch_consolidated_report.php?batch=${batch}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
           setConsolidatedReport(data.consolidatedReport);
           calculateTotal(data.consolidatedReport);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
         } else {
           console.error("Error:", data.message);
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [batch]);
 
   const calculateTotal = (data) => {
     let newTotal = {
@@ -126,6 +142,10 @@ function BranchConsolidatedReport() {
     content: () => componentRef.current,
   });
 
+  const handleBatchChange = (event) => {
+    setBatch(event.target.value);
+  };
+
   return (
     <div>
       <Navbar />
@@ -136,6 +156,41 @@ function BranchConsolidatedReport() {
         <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
           Consolidated Report for {specialization}
         </h2>
+
+        <div>
+          {role === "Program Coordinator" ? (
+            <div>
+              <FormControl className="form-control">
+                <InputLabel htmlFor="batch">Batch</InputLabel>{" "}
+                <Select
+                  name="batch"
+                  label="batch"
+                  id="batch"
+                  value={batch}
+                  onChange={handleBatchChange}
+                  style={{
+                    color: "black",
+                    minWidth: 120,
+                    marginBottom: "20px",
+                  }} // Adjust minWidth as needed
+                >
+                  {[...Array(2051 - 2022).keys()].map((year) => (
+                    <MenuItem
+                      key={2022 + year}
+                      value={2022 + year}
+                      style={{ color: "black" }}
+                    >
+                      {2022 + year}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
+
         {/* table 1 */}
         <TableContainer component={Paper}>
           <Table size="small" aria-label="a dense table">
@@ -267,14 +322,18 @@ function BranchConsolidatedReport() {
         </TableContainer>
 
         {/*Salary*/}
-        <SalaryCategorisation
-          apiUrl={`${api_url}server/get_branch_salary_categorisation.php`}
-        />
+        {shouldRender && (
+          <SalaryCategorisation
+            apiUrl={`${api_url}server/get_branch_salary_categorisation.php?batch=${batch}`}
+          />
+        )}
 
         {/*Marquee*/}
-        <MarqueeStudents
-          apiUrl={`${api_url}/server/get_branch_marquee_students.php`}
-        />
+        {shouldRender && (
+          <MarqueeStudents
+            apiUrl={`${api_url}/server/get_branch_marquee_students.php?batch=${batch}`}
+          />
+        )}
 
         {/*Offer Summary*/}
         <div style={{ maxWidth: "50%", margin: "0 auto" }}>
@@ -374,13 +433,19 @@ function BranchConsolidatedReport() {
           </ResponsiveContainer>
         </div>
         {/* Student Statistics */}
-        <StudentStatistics
-          apiUrl={`${api_url}server/get_branch_student_statistics.php`}
-        />
+        {shouldRender && (
+          <StudentStatistics
+            apiUrl={`${api_url}server/get_branch_student_statistics.php?batch=${batch}`}
+          />
+        )}
+
         {/*Salary Statistics */}
-        <SalaryStatistics
-          apiUrl={`${api_url}server/get_branch_salary_statistics.php`}
-        />
+        {shouldRender && (
+          <SalaryStatistics
+            apiUrl={`${api_url}server/get_branch_salary_statistics.php?batch=${batch}`}
+          />
+        )}
+
         <Button
           className="print-button"
           style={{

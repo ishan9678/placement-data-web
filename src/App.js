@@ -21,6 +21,9 @@ import { gapi } from "gapi-script";
 import AdditionalDetails from "./pages/AdditionalDetails";
 import AddPlacedStudents from "./pages/AddPlacedStudents";
 import FaConsolidatedReport from "./pages/FaConsolidatedReport";
+import AdminHome from "./pages/AdminHome";
+import AddStudents from "./pages/AddStudents";
+import ProgramCoordinatorHome from "./pages/ProgramCoordinatorHome";
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
 
@@ -53,7 +56,7 @@ const App = () => {
 
   const renderHomeRoute = () => {
     if (userRole === "Admin") {
-      return <AdminDashboard />;
+      return <AdminHome />;
     } else if (userRole === "Faculty Advisor") {
       return <FaHome />;
     } else if (userRole === "Placement Coordinator") {
@@ -62,8 +65,9 @@ const App = () => {
       return <HodHome />;
     } else if (userRole === "Academic Advisor") {
       return <AcademicAdvisorHome />;
+    } else if (userRole === "Program Coordinator") {
+      return <ProgramCoordinatorHome />;
     }
-
     return null;
   };
 
@@ -101,6 +105,8 @@ const App = () => {
         <Route path="/consolidated-report" element={<ConsolidatedReport />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/additional-details" element={<AdditionalDetails />} />
+        <Route path="/approve-users" element={<AdminDashboard/>} />
+        <Route path="/add-students" element={<AddStudents/>} />
       </Routes>
     </Router>
   );

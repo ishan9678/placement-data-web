@@ -43,7 +43,7 @@ const AcademicAdvisorHome = () => {
                     title="View Placed Student Details"
                     description="Click here to view details of placed students."
                     imageUrl={PlacedStudentImage}
-                    action={() => navigate("/view-branch-placed-students")}
+                    action={() => navigate("/view-all-placed-student-details")}
                   />
                   <OptionCard
                     title="View Consolidated Report"

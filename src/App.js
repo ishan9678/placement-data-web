@@ -24,6 +24,9 @@ import FaConsolidatedReport from "./pages/FaConsolidatedReport";
 import AdminHome from "./pages/AdminHome";
 import AddStudents from "./pages/AddStudents";
 import ProgramCoordinatorHome from "./pages/ProgramCoordinatorHome";
+import EditStudentDetails from "./pages/EditStudentDetails";
+import AcademicAdvisorConsolidatedReport from "./pages/AcademicAdivisorConslidatedReport";
+
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
 
@@ -96,7 +99,7 @@ const App = () => {
         <Route path="/student-details" element={<AddPlacedStudents />} />
         <Route
           path="/branch-consolidated-report"
-          element={<BranchConsolidatedReport />}
+          element={<AcademicAdvisorConsolidatedReport />}
         />
         <Route
           path="/fa-consolidated-report"
@@ -107,6 +110,7 @@ const App = () => {
         <Route path="/additional-details" element={<AdditionalDetails />} />
         <Route path="/approve-users" element={<AdminDashboard/>} />
         <Route path="/add-students" element={<AddStudents/>} />
+        <Route path="/edit-students" element={<EditStudentDetails/>} />
       </Routes>
     </Router>
   );

@@ -10,7 +10,7 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
-import ExcelTemplate from "../excel-templates/exampleCSV.csv";
+import ExcelTemplate from "../excel-templates/placed-students.xlsx";
 import api_url from "../apiconfig";
 import Navbar from "../components/Navbar";
 
@@ -65,6 +65,54 @@ const fields = [
     ],
   },
   {
+    label: "Batch",
+    key: "batch",
+    alternateMatches: [],
+    fieldType: {
+      type: "input",
+    },
+    example: "2025",
+    validations: [
+      {
+        rule: "required",
+        errorMessage: "Batch year is required",
+        level: "error",
+      },
+    ],
+  },
+  {
+    label: "Specialization",
+    key: "specialization",
+    alternateMatches: [],
+    fieldType: {
+      type: "input",
+    },
+    example: "AI",
+    validations: [
+      {
+        rule: "required",
+        errorMessage: "Specialization is required",
+        level: "error",
+      },
+    ],
+  },
+  {
+    label: "Faculty Advisor",
+    key: "facultyAdvisorName",
+    alternateMatches: [],
+    fieldType: {
+      type: "input",
+    },
+    example: "Mr John Doe",
+    validations: [
+      {
+        rule: "required",
+        errorMessage: "Faculty Advisor Name is required",
+        level: "error",
+      },
+    ],
+  },
+  {
     label: "Company Name",
     key: "companyName",
     alternateMatches: [],
@@ -108,38 +156,6 @@ const fields = [
       {
         rule: "required",
         errorMessage: "Package is required",
-        level: "error",
-      },
-    ],
-  },
-  {
-    label: "Faculty Advisor",
-    key: "facultyAdvisorName",
-    alternateMatches: [],
-    fieldType: {
-      type: "input",
-    },
-    example: "Mr John Doe",
-    validations: [
-      {
-        rule: "required",
-        errorMessage: "Faculty Advisor Name is required",
-        level: "error",
-      },
-    ],
-  },
-  {
-    label: "Batch",
-    key: "batch",
-    alternateMatches: [],
-    fieldType: {
-      type: "input",
-    },
-    example: "2025",
-    validations: [
-      {
-        rule: "required",
-        errorMessage: "Batch year is required",
         level: "error",
       },
     ],

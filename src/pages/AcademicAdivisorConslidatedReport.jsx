@@ -35,6 +35,7 @@ import { useReactToPrint } from "react-to-print";
 
 function AcademicAdvisorConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
+  const [departmentStatistics, setDepartmentStatistics] = useState([]);
   const [batch, setBatch] = useState(2025);
   const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({
@@ -47,6 +48,19 @@ function AcademicAdvisorConsolidatedReport() {
     totalOffers: 0,
     totalCount: 0,
     notPlaced: 0,
+    uniqueCount: 0,
+  });
+
+  const [departmentStatisticsTotal, setDepartmentStatisticsTotal] = useState({
+    totalCount: 0,
+    supersetEnrolledCount: 0,
+    marquee: 0,
+    superDream: 0,
+    dream: 0,
+    daySharing: 0,
+    internship: 0,
+    totalOffers: 0,
+    uniqueCount: 0,
   });
 
   useEffect(() => {
@@ -59,6 +73,27 @@ function AcademicAdvisorConsolidatedReport() {
         if (data.status === "success") {
           setConsolidatedReport(data.consolidatedReport);
           calculateTotal(data.consolidatedReport);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, [batch]);
+
+  useEffect(() => {
+    //fetch dept statistics
+    fetch(`${api_url}server/get_all_department_statistics.php?batch=${batch}`, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setDepartmentStatistics(data.departmentStatistics);
+          calculateDepartmentTotal(data.departmentStatistics);
           setShouldRender(false);
           setTimeout(() => {
             setShouldRender(true);
@@ -98,6 +133,7 @@ function AcademicAdvisorConsolidatedReport() {
       totalOffers: 0,
       totalCount: 0,
       notPlaced: 0,
+      uniqueCount: 0,
     };
 
     data.forEach((advisor) => {
@@ -106,11 +142,44 @@ function AcademicAdvisorConsolidatedReport() {
           newTotal[key] += parseInt(advisor[key], 10);
         }
       });
-
-      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.totalOffers;
+      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.uniqueCount;
     });
 
     setTotal(newTotal);
+  };
+
+  const calculateDepartmentTotal = (data) => {
+    let newDepartmentTotal = {
+      totalCount: 0,
+      supersetEnrolledCount: 0,
+      marquee: 0,
+      superDream: 0,
+      dream: 0,
+      daySharing: 0,
+      internship: 0,
+      totalOffers: 0,
+      uniqueCount: 0,
+    };
+
+    Object.values(data).forEach((department) => {
+      Object.keys(department).forEach((key) => {
+        if (key !== "supersetEnrolledCount" && key !== "totalCount") {
+          newDepartmentTotal[key] += parseInt(department[key], 10);
+        }
+      });
+      newDepartmentTotal.supersetEnrolledCount +=
+        department.supersetEnrolledCount;
+      newDepartmentTotal.totalCount += department.totalCount;
+      // newDepartmentTotal.totalOffers += department.totalOffers;
+      // newDepartmentTotal.uniqueCount += department.uniqueCount;
+      // newDepartmentTotal.marquee += department.marquee;
+      // newDepartmentTotal.superDream += department.superDream;
+      // newDepartmentTotal.dream += newDepartmentTotal.dream;
+      // newDepartmentTotal.daySharing += newDepartmentTotal.daySharing;
+      // newDepartmentTotal.internship += newDepartmentTotal.internship;
+    });
+
+    setDepartmentStatisticsTotal(newDepartmentTotal);
   };
 
   const offersCategoriesChartData = [
@@ -147,7 +216,6 @@ function AcademicAdvisorConsolidatedReport() {
         ref={componentRef}
         style={{ maxHeight: "720px", marginTop: "200px" }}
       >
-        {/* select batch */}
         <div>
           <h2 style={{ textAlign: "center" }}>
             Consolidated Report For All Students
@@ -196,6 +264,7 @@ function AcademicAdvisorConsolidatedReport() {
                   <TableCell>Day Sharing</TableCell>
                   <TableCell>Internship Offers</TableCell>
                   <TableCell>Total Offers</TableCell>
+                  <TableCell>Unique Offers</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -210,6 +279,7 @@ function AcademicAdvisorConsolidatedReport() {
                     <TableCell>{advisor.daySharing}</TableCell>
                     <TableCell>{advisor.internship}</TableCell>
                     <TableCell>{advisor.totalOffers}</TableCell>
+                    <TableCell>{advisor.uniqueCount}</TableCell>
                   </TableRow>
                 ))}
                 <TableRow
@@ -239,6 +309,9 @@ function AcademicAdvisorConsolidatedReport() {
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {total.totalOffers}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {total.uniqueCount}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -271,16 +344,16 @@ function AcademicAdvisorConsolidatedReport() {
                     <TableCell>{advisor.facultyAdvisorSection}</TableCell>
                     <TableCell>{advisor.totalCount}</TableCell>
                     <TableCell>{advisor.supersetEnrolledCount}</TableCell>
-                    <TableCell>{advisor.totalOffers}</TableCell>
+                    <TableCell>{advisor.uniqueCount}</TableCell>
                     <TableCell>
                       {(
-                        (advisor.totalOffers / advisor.supersetEnrolledCount) *
+                        (advisor.uniqueCount / advisor.supersetEnrolledCount) *
                         100
                       ).toFixed(2)}
                       %
                     </TableCell>
                     <TableCell>
-                      {advisor.supersetEnrolledCount - advisor.totalOffers}
+                      {advisor.supersetEnrolledCount - advisor.uniqueCount}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -298,9 +371,16 @@ function AcademicAdvisorConsolidatedReport() {
                     {total.supersetEnrolledCount}
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
-                    {total.totalOffers}
+                    {total.uniqueCount}
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {" "}
+                    {(
+                      (total.uniqueCount / total.supersetEnrolledCount) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {total.notPlaced}
                   </TableCell>
@@ -309,21 +389,113 @@ function AcademicAdvisorConsolidatedReport() {
             </Table>
           </TableContainer>
 
-          {/*Salary*/}
+          {/*Department Statistics*/}
+          <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+            <Table size="small" aria-label="branch-statistics">
+              <TableHead>
+                <TableRow
+                  sx={{
+                    backgroundColor: "#00afef",
+                    color: "white",
+                  }}
+                >
+                  <TableCell>Department</TableCell>
+                  <TableCell>Total Count</TableCell>
+                  <TableCell>Superset Enrolled</TableCell>
+                  <TableCell>Marquee</TableCell>
+                  <TableCell>Super Dream</TableCell>
+                  <TableCell>Dream</TableCell>
+                  <TableCell>Day Sharing</TableCell>
+                  <TableCell>Internship</TableCell>
+                  <TableCell>Total Offers</TableCell>
+                  <TableCell>Percentage %</TableCell>
+                  <TableCell>Unique Offers</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Object.entries(departmentStatistics).map(
+                  ([department, stats]) => (
+                    <TableRow key={department}>
+                      <TableCell>{department}</TableCell>
+                      <TableCell>{stats.totalCount}</TableCell>
+                      <TableCell>{stats.supersetEnrolledCount}</TableCell>
+                      <TableCell>{stats.marquee}</TableCell>
+                      <TableCell>{stats.superDream}</TableCell>
+                      <TableCell>{stats.dream}</TableCell>
+                      <TableCell>{stats.daySharing}</TableCell>
+                      <TableCell>{stats.internship}</TableCell>
+                      <TableCell>{stats.totalOffers}</TableCell>
+                      <TableCell>
+                        {(
+                          (stats.totalOffers / stats.supersetEnrolledCount) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </TableCell>
+                      <TableCell>{stats.uniqueCount}</TableCell>
+                    </TableRow>
+                  )
+                )}
+                <TableRow
+                  sx={{
+                    backgroundColor: "#f0f0f0",
+                  }}
+                >
+                  <TableCell>
+                    <strong>Total</strong>
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.totalCount}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.supersetEnrolledCount}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.marquee}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.superDream}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.dream}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.daySharing}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.internship}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.totalOffers}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {(
+                      (departmentStatisticsTotal.totalOffers /
+                        departmentStatisticsTotal.supersetEnrolledCount) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.uniqueCount}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
 
+          {/*Salary*/}
           {shouldRender && (
             <SalaryCategorisation
               apiUrl={`${api_url}server/get_salary_categorisation.php?batch=${batch}`}
             />
           )}
-
           {/*Marquee*/}
           {shouldRender && (
             <MarqueeStudents
               apiUrl={`${api_url}/server/get_marquee_students.php?batch=${batch}`}
             />
           )}
-
           {/*Offer Summary*/}
           <div style={{ maxWidth: "50%", margin: "0 auto" }}>
             <h3>Offer Summary</h3>
@@ -384,7 +556,6 @@ function AcademicAdvisorConsolidatedReport() {
               </Table>
             </TableContainer>
           </div>
-
           {/* Offers under various categories Graph*/}
           <div style={{ maxWidth: "80%", margin: "0 auto" }}>
             <h3>Offers under various Categories</h3>
@@ -427,7 +598,6 @@ function AcademicAdvisorConsolidatedReport() {
               apiUrl={`${api_url}server/get_student_statistics.php?batch=${batch}`}
             />
           )}
-
           {/*Salary Statistics */}
           {shouldRender && (
             <SalaryStatistics

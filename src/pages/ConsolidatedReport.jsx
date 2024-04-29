@@ -48,6 +48,7 @@ function ConsolidatedReport() {
     totalOffers: 0,
     totalCount: 0,
     notPlaced: 0,
+    uniqueCount: 0,
   });
 
   const [departmentStatisticsTotal, setDepartmentStatisticsTotal] = useState({
@@ -59,6 +60,7 @@ function ConsolidatedReport() {
     daySharing: 0,
     internship: 0,
     totalOffers: 0,
+    uniqueCount: 0,
   });
 
   useEffect(() => {
@@ -114,6 +116,7 @@ function ConsolidatedReport() {
       totalOffers: 0,
       totalCount: 0,
       notPlaced: 0,
+      uniqueCount: 0,
     };
 
     data.forEach((advisor) => {
@@ -123,7 +126,7 @@ function ConsolidatedReport() {
         }
       });
 
-      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.totalOffers;
+      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.uniqueCount;
     });
 
     setTotal(newTotal);
@@ -139,6 +142,7 @@ function ConsolidatedReport() {
       daySharing: 0,
       internship: 0,
       totalOffers: 0,
+      uniqueCount: 0,
     };
 
     Object.values(data).forEach((department) => {
@@ -150,7 +154,13 @@ function ConsolidatedReport() {
       newDepartmentTotal.supersetEnrolledCount +=
         department.supersetEnrolledCount;
       newDepartmentTotal.totalCount += department.totalCount;
-      newDepartmentTotal.totalOffers += department.totalOffers;
+      // newDepartmentTotal.totalOffers += department.totalOffers;
+      // newDepartmentTotal.uniqueCount += department.uniqueCount;
+      // newDepartmentTotal.marquee += department.marquee;
+      // newDepartmentTotal.superDream += department.superDream;
+      // newDepartmentTotal.dream += newDepartmentTotal.dream;
+      // newDepartmentTotal.daySharing += newDepartmentTotal.daySharing;
+      // newDepartmentTotal.internship += newDepartmentTotal.internship;
     });
 
     setDepartmentStatisticsTotal(newDepartmentTotal);
@@ -238,6 +248,7 @@ function ConsolidatedReport() {
                   <TableCell>Day Sharing</TableCell>
                   <TableCell>Internship Offers</TableCell>
                   <TableCell>Total Offers</TableCell>
+                  <TableCell>Unique Offers</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -252,6 +263,7 @@ function ConsolidatedReport() {
                     <TableCell>{advisor.daySharing}</TableCell>
                     <TableCell>{advisor.internship}</TableCell>
                     <TableCell>{advisor.totalOffers}</TableCell>
+                    <TableCell>{advisor.uniqueCount}</TableCell>
                   </TableRow>
                 ))}
                 <TableRow
@@ -281,6 +293,9 @@ function ConsolidatedReport() {
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {total.totalOffers}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {total.uniqueCount}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -313,16 +328,16 @@ function ConsolidatedReport() {
                     <TableCell>{advisor.facultyAdvisorSection}</TableCell>
                     <TableCell>{advisor.totalCount}</TableCell>
                     <TableCell>{advisor.supersetEnrolledCount}</TableCell>
-                    <TableCell>{advisor.totalOffers}</TableCell>
+                    <TableCell>{advisor.uniqueCount}</TableCell>
                     <TableCell>
                       {(
-                        (advisor.totalOffers / advisor.supersetEnrolledCount) *
+                        (advisor.uniqueCount / advisor.supersetEnrolledCount) *
                         100
                       ).toFixed(2)}
                       %
                     </TableCell>
                     <TableCell>
-                      {advisor.supersetEnrolledCount - advisor.totalOffers}
+                      {advisor.supersetEnrolledCount - advisor.uniqueCount}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -340,9 +355,16 @@ function ConsolidatedReport() {
                     {total.supersetEnrolledCount}
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
-                    {total.totalOffers}
+                    {total.uniqueCount}
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {" "}
+                    {(
+                      (total.uniqueCount / total.supersetEnrolledCount) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {total.notPlaced}
                   </TableCell>
@@ -371,6 +393,7 @@ function ConsolidatedReport() {
                   <TableCell>Internship</TableCell>
                   <TableCell>Total Offers</TableCell>
                   <TableCell>Percentage %</TableCell>
+                  <TableCell>Unique Offers</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -387,13 +410,13 @@ function ConsolidatedReport() {
                       <TableCell>{stats.internship}</TableCell>
                       <TableCell>{stats.totalOffers}</TableCell>
                       <TableCell>
-                        <TableCell>
-                          {(
-                            stats.totalOffers / stats.supersetEnrolledCount
-                          ).toFixed(2)}
-                          %
-                        </TableCell>
+                        {(
+                          (stats.totalOffers / stats.supersetEnrolledCount) *
+                          100
+                        ).toFixed(2)}
+                        %
                       </TableCell>
+                      <TableCell>{stats.uniqueCount}</TableCell>
                     </TableRow>
                   )
                 )}
@@ -405,22 +428,40 @@ function ConsolidatedReport() {
                   <TableCell>
                     <strong>Total</strong>
                   </TableCell>
-                  <TableCell>{departmentStatisticsTotal.totalCount}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.totalCount}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
                     {departmentStatisticsTotal.supersetEnrolledCount}
                   </TableCell>
-                  <TableCell>{departmentStatisticsTotal.marquee}</TableCell>
-                  <TableCell>{departmentStatisticsTotal.superDream}</TableCell>
-                  <TableCell>{departmentStatisticsTotal.dream}</TableCell>
-                  <TableCell>{departmentStatisticsTotal.daySharing}</TableCell>
-                  <TableCell>{departmentStatisticsTotal.internship}</TableCell>
-                  <TableCell>{departmentStatisticsTotal.totalOffers}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.marquee}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.superDream}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.dream}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.daySharing}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.internship}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.totalOffers}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
                     {(
-                      departmentStatisticsTotal.totalOffers /
-                      departmentStatisticsTotal.supersetEnrolledCount
+                      (departmentStatisticsTotal.totalOffers /
+                        departmentStatisticsTotal.supersetEnrolledCount) *
+                      100
                     ).toFixed(2)}
                     %
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.uniqueCount}
                   </TableCell>
                 </TableRow>
               </TableBody>

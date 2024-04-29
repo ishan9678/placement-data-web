@@ -48,6 +48,7 @@ function BranchConsolidatedReport() {
     totalOffers: 0,
     totalCount: 0,
     notPlaced: 0,
+    uniqueCount: 0,
   });
 
   useEffect(() => {
@@ -104,6 +105,7 @@ function BranchConsolidatedReport() {
       totalOffers: 0,
       totalCount: 0,
       notPlaced: 0,
+      uniqueCount: 0,
     };
 
     data.forEach((advisor) => {
@@ -112,8 +114,7 @@ function BranchConsolidatedReport() {
           newTotal[key] += parseInt(advisor[key], 10);
         }
       });
-
-      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.totalOffers;
+      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.uniqueCount;
     });
 
     setTotal(newTotal);
@@ -210,6 +211,7 @@ function BranchConsolidatedReport() {
                 <TableCell>Day Sharing</TableCell>
                 <TableCell>Internship Offers</TableCell>
                 <TableCell>Total Offers</TableCell>
+                <TableCell>Unique Offers</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -224,6 +226,7 @@ function BranchConsolidatedReport() {
                   <TableCell>{advisor.daySharing}</TableCell>
                   <TableCell>{advisor.internship}</TableCell>
                   <TableCell>{advisor.totalOffers}</TableCell>
+                  <TableCell>{advisor.uniqueCount}</TableCell>
                 </TableRow>
               ))}
               <TableRow
@@ -251,6 +254,9 @@ function BranchConsolidatedReport() {
                 </TableCell>
                 <TableCell sx={{ fontWeight: "800" }}>
                   {total.totalOffers}
+                </TableCell>
+                <TableCell sx={{ fontWeight: "800" }}>
+                  {total.uniqueCount}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -283,16 +289,16 @@ function BranchConsolidatedReport() {
                   <TableCell>{advisor.facultyAdvisorSection}</TableCell>
                   <TableCell>{advisor.totalCount}</TableCell>
                   <TableCell>{advisor.supersetEnrolledCount}</TableCell>
-                  <TableCell>{advisor.totalOffers}</TableCell>
+                  <TableCell>{advisor.uniqueCount}</TableCell>
                   <TableCell>
                     {(
-                      (advisor.totalOffers / advisor.supersetEnrolledCount) *
+                      (advisor.uniqueCount / advisor.supersetEnrolledCount) *
                       100
                     ).toFixed(2)}
                     %
                   </TableCell>
                   <TableCell>
-                    {advisor.supersetEnrolledCount - advisor.totalOffers}
+                    {advisor.supersetEnrolledCount - advisor.uniqueCount}
                   </TableCell>
                 </TableRow>
               ))}
@@ -310,9 +316,16 @@ function BranchConsolidatedReport() {
                   {total.supersetEnrolledCount}
                 </TableCell>
                 <TableCell sx={{ fontWeight: "800" }}>
-                  {total.totalOffers}
+                  {total.uniqueCount}
                 </TableCell>
-                <TableCell></TableCell>
+                <TableCell sx={{ fontWeight: "800" }}>
+                  {" "}
+                  {(
+                    (total.uniqueCount / total.supersetEnrolledCount) *
+                    100
+                  ).toFixed(2)}
+                  %
+                </TableCell>
                 <TableCell sx={{ fontWeight: "800" }}>
                   {total.notPlaced}
                 </TableCell>

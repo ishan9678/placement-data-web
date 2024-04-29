@@ -127,6 +127,7 @@ function EditStudentDetails() {
           <option value="Super Dream">Super Dream</option>
           <option value="Dream">Dream</option>
           <option value="Day Sharing">Day Sharing</option>
+          <option value="Internship">Internship</option>
         </TextField>
       ),
     },

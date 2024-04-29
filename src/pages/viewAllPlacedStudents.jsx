@@ -11,6 +11,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
@@ -21,6 +22,23 @@ function ViewAllPlacedStudents() {
   const [selectedAdvisor, setSelectedAdvisor] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [companies, setCompanies] = useState([]);
+  const [role, setRole] = useState();
+
+  useEffect(() => {
+    fetch(`${api_url}server/get_user_info.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setRole(data.role);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, []);
 
   useEffect(() => {
     // Fetch faculty advisors
@@ -157,6 +175,9 @@ function ViewAllPlacedStudents() {
                 <TableCell>Package</TableCell>
                 <TableCell>Faculty Advisor</TableCell>
                 <TableCell>Batch</TableCell>
+                {role === "Placement Coordinator" && (
+                  <TableCell>File</TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -170,6 +191,26 @@ function ViewAllPlacedStudents() {
                   <TableCell>{student.package} LPA</TableCell>
                   <TableCell>{student.facultyAdvisor}</TableCell>
                   <TableCell>{student.batch}</TableCell>
+                  {role === "Placement Coordinator" && student.file ? (
+                    <TableCell>
+                      {student.file}
+                      <div
+                        style={{ display: "inline-block", marginLeft: "10px" }}
+                      >
+                        <Button
+                          variant="contained"
+                          component="a"
+                          href={`${api_url}server/download.php?registerNumber=${student.registerNumber}`}
+                          download
+                          size="small"
+                        >
+                          Download
+                        </Button>
+                      </div>
+                    </TableCell>
+                  ) : (
+                    <TableCell></TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

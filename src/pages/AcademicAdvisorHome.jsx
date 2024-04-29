@@ -49,7 +49,7 @@ const AcademicAdvisorHome = () => {
                     title="View Consolidated Report"
                     description="Click here to view the consolidated report."
                     imageUrl={PlacedStudentImage}
-                    action={() => navigate("/branch-consolidated-report")}
+                    action={() => navigate("/academic-consolidated-report")}
                   />
                 </div>
               </>

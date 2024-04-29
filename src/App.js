@@ -98,9 +98,10 @@ const App = () => {
         />
         <Route path="/student-details" element={<AddPlacedStudents />} />
         <Route
-          path="/branch-consolidated-report"
+          path="/academic-consolidated-report"
           element={<AcademicAdvisorConsolidatedReport />}
         />
+        <Route path="/branch-consolidated-report" element={<BranchConsolidatedReport/>} />
         <Route
           path="/fa-consolidated-report"
           element={<FaConsolidatedReport />}

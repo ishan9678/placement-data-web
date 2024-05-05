@@ -59,6 +59,12 @@ const AdminHome = () => {
                     imageUrl={EditStudentImage}
                     action={() => navigate("/edit-students")}
                   />
+                  <OptionCard
+                    title="Edit Faculty details"
+                    description="Click here to edit faculty details"
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/edit-faculties")}
+                  />
                 </div>
               </>
             ) : (

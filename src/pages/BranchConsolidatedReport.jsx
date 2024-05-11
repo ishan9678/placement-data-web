@@ -35,7 +35,7 @@ import api_url from "../apiconfig";
 function BranchConsolidatedReport() {
   const [specialization, setSpecialization] = useState(null);
   const [role, setRole] = useState("");
-  const [batch, setBatch] = useState();
+  const [batch, setBatch] = useState(null);
   const [consolidatedReport, setConsolidatedReport] = useState([]);
   const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({

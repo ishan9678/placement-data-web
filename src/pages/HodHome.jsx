@@ -29,6 +29,7 @@ const HodHome = () => {
 
   return (
     <div className="container">
+      <Navbar />
       <Card className="mainCard">
         <CardContent>
           {user !== null ? (
@@ -66,36 +67,31 @@ const HodHome = () => {
 
 const OptionCard = ({ title, description, imageUrl, action }) => {
   return (
-    <div>
-      <Navbar />
-      <div>
-        <Card className="optionCard">
-          <CardContent>
-            <Typography variant="h6" component="div" gutterBottom>
-              {title}
-            </Typography>
-            <img
-              src={imageUrl}
-              alt={title}
-              className="cardImage"
-              style={{ marginTop: "20px" }}
-            />
-            <Typography variant="body2" color="text.secondary">
-              {description}
-            </Typography>
-            <Button
-              onClick={action}
-              variant="contained"
-              color="primary"
-              className="button"
-              style={{ marginTop: "20px" }}
-            >
-              Go
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <Card className="optionCard">
+      <CardContent>
+        <Typography variant="h6" component="div" gutterBottom>
+          {title}
+        </Typography>
+        <img
+          src={imageUrl}
+          alt={title}
+          className="cardImage"
+          style={{ marginTop: "20px" }}
+        />
+        <Typography variant="body2" color="text.secondary">
+          {description}
+        </Typography>
+        <Button
+          onClick={action}
+          variant="contained"
+          color="primary"
+          className="button"
+          style={{ marginTop: "20px" }}
+        >
+          Go
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 

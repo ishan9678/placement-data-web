@@ -8,6 +8,10 @@ import {
   TableRow,
   Paper,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   BarChart,
@@ -30,7 +34,10 @@ import api_url from "../apiconfig";
 
 function BranchConsolidatedReport() {
   const [specialization, setSpecialization] = useState(null);
+  const [role, setRole] = useState("");
+  const [batch, setBatch] = useState(null);
   const [consolidatedReport, setConsolidatedReport] = useState([]);
+  const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
     marquee: 0,
@@ -41,6 +48,7 @@ function BranchConsolidatedReport() {
     totalOffers: 0,
     totalCount: 0,
     notPlaced: 0,
+    uniqueCount: 0,
   });
 
   useEffect(() => {
@@ -52,6 +60,8 @@ function BranchConsolidatedReport() {
       .then((data) => {
         if (data.status === "success") {
           setSpecialization(data.specialization);
+          setRole(data.role);
+          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }
@@ -61,21 +71,28 @@ function BranchConsolidatedReport() {
 
   useEffect(() => {
     // Fetch consolidated report data
-    fetch(`${api_url}server/get_branch_consolidated_report.php`, {
-      method: "GET",
-      credentials: "include",
-    })
+    fetch(
+      `${api_url}server/get_branch_consolidated_report.php?batch=${batch}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
           setConsolidatedReport(data.consolidatedReport);
           calculateTotal(data.consolidatedReport);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
         } else {
           console.error("Error:", data.message);
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [batch]);
 
   const calculateTotal = (data) => {
     let newTotal = {
@@ -88,6 +105,7 @@ function BranchConsolidatedReport() {
       totalOffers: 0,
       totalCount: 0,
       notPlaced: 0,
+      uniqueCount: 0,
     };
 
     data.forEach((advisor) => {
@@ -96,8 +114,7 @@ function BranchConsolidatedReport() {
           newTotal[key] += parseInt(advisor[key], 10);
         }
       });
-
-      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.totalOffers;
+      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.uniqueCount;
     });
 
     setTotal(newTotal);
@@ -126,6 +143,10 @@ function BranchConsolidatedReport() {
     content: () => componentRef.current,
   });
 
+  const handleBatchChange = (event) => {
+    setBatch(event.target.value);
+  };
+
   return (
     <div>
       <Navbar />
@@ -136,6 +157,41 @@ function BranchConsolidatedReport() {
         <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
           Consolidated Report for {specialization}
         </h2>
+
+        <div>
+          {role === "Program Coordinator" ? (
+            <div>
+              <FormControl className="form-control">
+                <InputLabel htmlFor="batch">Batch</InputLabel>{" "}
+                <Select
+                  name="batch"
+                  label="batch"
+                  id="batch"
+                  value={batch}
+                  onChange={handleBatchChange}
+                  style={{
+                    color: "black",
+                    minWidth: 120,
+                    marginBottom: "20px",
+                  }} // Adjust minWidth as needed
+                >
+                  {[...Array(2051 - 2022).keys()].map((year) => (
+                    <MenuItem
+                      key={2022 + year}
+                      value={2022 + year}
+                      style={{ color: "black" }}
+                    >
+                      {2022 + year}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
+
         {/* table 1 */}
         <TableContainer component={Paper}>
           <Table size="small" aria-label="a dense table">
@@ -155,6 +211,7 @@ function BranchConsolidatedReport() {
                 <TableCell>Day Sharing</TableCell>
                 <TableCell>Internship Offers</TableCell>
                 <TableCell>Total Offers</TableCell>
+                <TableCell>Unique Offers</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -169,6 +226,7 @@ function BranchConsolidatedReport() {
                   <TableCell>{advisor.daySharing}</TableCell>
                   <TableCell>{advisor.internship}</TableCell>
                   <TableCell>{advisor.totalOffers}</TableCell>
+                  <TableCell>{advisor.uniqueCount}</TableCell>
                 </TableRow>
               ))}
               <TableRow
@@ -196,6 +254,9 @@ function BranchConsolidatedReport() {
                 </TableCell>
                 <TableCell sx={{ fontWeight: "800" }}>
                   {total.totalOffers}
+                </TableCell>
+                <TableCell sx={{ fontWeight: "800" }}>
+                  {total.uniqueCount}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -228,16 +289,16 @@ function BranchConsolidatedReport() {
                   <TableCell>{advisor.facultyAdvisorSection}</TableCell>
                   <TableCell>{advisor.totalCount}</TableCell>
                   <TableCell>{advisor.supersetEnrolledCount}</TableCell>
-                  <TableCell>{advisor.totalOffers}</TableCell>
+                  <TableCell>{advisor.uniqueCount}</TableCell>
                   <TableCell>
                     {(
-                      (advisor.totalOffers / advisor.supersetEnrolledCount) *
+                      (advisor.uniqueCount / advisor.supersetEnrolledCount) *
                       100
                     ).toFixed(2)}
                     %
                   </TableCell>
                   <TableCell>
-                    {advisor.supersetEnrolledCount - advisor.totalOffers}
+                    {advisor.supersetEnrolledCount - advisor.uniqueCount}
                   </TableCell>
                 </TableRow>
               ))}
@@ -255,9 +316,16 @@ function BranchConsolidatedReport() {
                   {total.supersetEnrolledCount}
                 </TableCell>
                 <TableCell sx={{ fontWeight: "800" }}>
-                  {total.totalOffers}
+                  {total.uniqueCount}
                 </TableCell>
-                <TableCell></TableCell>
+                <TableCell sx={{ fontWeight: "800" }}>
+                  {" "}
+                  {(
+                    (total.uniqueCount / total.supersetEnrolledCount) *
+                    100
+                  ).toFixed(2)}
+                  %
+                </TableCell>
                 <TableCell sx={{ fontWeight: "800" }}>
                   {total.notPlaced}
                 </TableCell>
@@ -267,14 +335,18 @@ function BranchConsolidatedReport() {
         </TableContainer>
 
         {/*Salary*/}
-        <SalaryCategorisation
-          apiUrl={`${api_url}server/get_branch_salary_categorisation.php`}
-        />
+        {shouldRender && (
+          <SalaryCategorisation
+            apiUrl={`${api_url}server/get_branch_salary_categorisation.php?batch=${batch}`}
+          />
+        )}
 
         {/*Marquee*/}
-        <MarqueeStudents
-          apiUrl={`${api_url}/server/get_branch_marquee_students.php`}
-        />
+        {shouldRender && (
+          <MarqueeStudents
+            apiUrl={`${api_url}/server/get_branch_marquee_students.php?batch=${batch}`}
+          />
+        )}
 
         {/*Offer Summary*/}
         <div style={{ maxWidth: "50%", margin: "0 auto" }}>
@@ -374,13 +446,19 @@ function BranchConsolidatedReport() {
           </ResponsiveContainer>
         </div>
         {/* Student Statistics */}
-        <StudentStatistics
-          apiUrl={`${api_url}server/get_branch_student_statistics.php`}
-        />
+        {shouldRender && (
+          <StudentStatistics
+            apiUrl={`${api_url}server/get_branch_student_statistics.php?batch=${batch}`}
+          />
+        )}
+
         {/*Salary Statistics */}
-        <SalaryStatistics
-          apiUrl={`${api_url}server/get_branch_salary_statistics.php`}
-        />
+        {shouldRender && (
+          <SalaryStatistics
+            apiUrl={`${api_url}server/get_branch_salary_statistics.php?batch=${batch}`}
+          />
+        )}
+
         <Button
           className="print-button"
           style={{

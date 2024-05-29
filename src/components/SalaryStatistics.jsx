@@ -66,7 +66,7 @@ function SalaryStatistics({ apiUrl }) {
                 Average Salary
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "800" }}>
-                {statistics.avg_package * 100000} INR
+                {statistics.avg_package} LPA
               </TableCell>
               <TableCell align="center">-</TableCell>
             </TableRow>

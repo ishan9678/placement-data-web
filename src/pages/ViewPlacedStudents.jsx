@@ -92,6 +92,37 @@ function ViewPlacedStudents() {
       });
   };
 
+  const handleDeleteFile = (registerNumber) => {
+    // Send a request to delete the file
+    fetch(`${api_url}server/delete_file.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ registerNumber }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          console.log("Sfoisjfeoijf");
+          // Update the fileStates state to reflect the deletion
+          const newFileStates = [...fileStates];
+          const index = placedStudents.findIndex(
+            (student) => student.registerNumber === registerNumber
+          );
+          newFileStates[index] = {
+            selected: false,
+            fileName: "",
+            file: null,
+          };
+          setFileStates(newFileStates);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  };
+
   return (
     <div style={{ maxHeight: "720px", marginTop: "200px" }}>
       <Navbar />
@@ -126,17 +157,31 @@ function ViewPlacedStudents() {
                   <TableCell sx={{ textAlign: "center" }}>
                     {fileStates[index].selected ? (
                       <div style={{ display: "flex", alignItems: "center" }}>
-                        <span>{fileStates[index].fileName}</span>
-                        <div style={{ marginLeft: "10px" }}>
-                          <Button
-                            variant="contained"
-                            component="a"
-                            href={`${api_url}server/download.php?registerNumber=${student.registerNumber}`}
-                            download
-                            size="small"
-                          >
-                            Download
-                          </Button>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <span>{fileStates[index].fileName}</span>
+                          <div style={{ marginLeft: "10px" }}>
+                            <Button
+                              variant="contained"
+                              component="a"
+                              href={`${api_url}server/download.php?registerNumber=${student.registerNumber}`}
+                              download
+                              size="small"
+                            >
+                              Download
+                            </Button>
+                          </div>
+                          <div style={{ marginLeft: "10px" }}>
+                            <Button
+                              variant="contained"
+                              size="small"
+                              onClick={() =>
+                                handleDeleteFile(student.registerNumber)
+                              }
+                              style={{ backgroundColor: "red" }}
+                            >
+                              Delete
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ) : (

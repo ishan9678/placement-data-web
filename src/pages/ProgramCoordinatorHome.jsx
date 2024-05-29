@@ -7,7 +7,7 @@ import api_url from "../apiconfig";
 import Navbar from "../components/Navbar";
 import "../styles/home.css";
 
-const AcademicAdvisorHome = () => {
+const ProgramCoordinatorHome = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -43,13 +43,13 @@ const AcademicAdvisorHome = () => {
                     title="View Placed Student Details"
                     description="Click here to view details of placed students."
                     imageUrl={PlacedStudentImage}
-                    action={() => navigate("/view-all-placed-student-details")}
+                    action={() => navigate("/view-branch-placed-students")}
                   />
                   <OptionCard
                     title="View Consolidated Report"
                     description="Click here to view the consolidated report."
                     imageUrl={PlacedStudentImage}
-                    action={() => navigate("/academic-consolidated-report")}
+                    action={() => navigate("/branch-consolidated-report")}
                   />
                 </div>
               </>
@@ -97,4 +97,4 @@ const OptionCard = ({ title, description, imageUrl, action }) => {
   );
 };
 
-export default AcademicAdvisorHome;
+export default ProgramCoordinatorHome;

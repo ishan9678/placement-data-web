@@ -160,7 +160,7 @@ const Signup = () => {
               <MenuItem value="AI" style={{ color: "black" }}>
                 AI
               </MenuItem>
-              <MenuItem value="AIML" style={{ color: "black" }}>
+              <MenuItem value="AI/ML" style={{ color: "black" }}>
                 AI/ML
               </MenuItem>
               <MenuItem value="SWE" style={{ color: "black" }}>

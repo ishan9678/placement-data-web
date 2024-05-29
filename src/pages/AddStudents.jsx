@@ -10,7 +10,7 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
-import ExcelTemplate from "../excel-templates/placed-students.xlsx";
+import ExcelTemplate from "../excel-templates/add-students.xlsx";
 import api_url from "../apiconfig";
 import Navbar from "../components/Navbar";
 
@@ -34,7 +34,7 @@ const fields = [
   },
   {
     label: "Full Name (AS PER ATTENDANCE)",
-    key: "fullName",
+    key: "name",
     alternateMatches: [],
     fieldType: {
       type: "input",
@@ -65,6 +65,22 @@ const fields = [
     ],
   },
   {
+    label: "Specialization",
+    key: "specialization",
+    alternateMatches: [],
+    fieldType: {
+      type: "input",
+    },
+    example: "AI",
+    validations: [
+      {
+        rule: "required",
+        errorMessage: "Specialization is required",
+        level: "error",
+      },
+    ],
+  },
+  {
     label: "Batch",
     key: "batch",
     alternateMatches: [],
@@ -81,17 +97,17 @@ const fields = [
     ],
   },
   {
-    label: "Specialization",
-    key: "specialization",
+    label: "Career Option",
+    key: "careerOption",
     alternateMatches: [],
     fieldType: {
       type: "input",
     },
-    example: "AI",
+    example: "Superset Enrolled",
     validations: [
       {
         rule: "required",
-        errorMessage: "Specialization is required",
+        errorMessage: "Category is required",
         level: "error",
       },
     ],
@@ -112,57 +128,9 @@ const fields = [
       },
     ],
   },
-  {
-    label: "Company Name",
-    key: "companyName",
-    alternateMatches: [],
-    fieldType: {
-      type: "input",
-    },
-    example: "ABC Corp",
-    validations: [
-      {
-        rule: "required",
-        errorMessage: "Company Name is required",
-        level: "error",
-      },
-    ],
-  },
-  {
-    label: "Category",
-    key: "category",
-    alternateMatches: [],
-    fieldType: {
-      type: "input",
-    },
-    example: "Marquee",
-    validations: [
-      {
-        rule: "required",
-        errorMessage: "Category is required",
-        level: "error",
-      },
-    ],
-  },
-  {
-    label: "Package",
-    key: "package",
-    alternateMatches: [],
-    fieldType: {
-      type: "input",
-    },
-    example: "8 LPA",
-    validations: [
-      {
-        rule: "required",
-        errorMessage: "Package is required",
-        level: "error",
-      },
-    ],
-  },
 ];
 
-function AddPlacedStudents() {
+function AddStudents() {
   const [isOpen, setIsOpen] = useState(false);
   const [submitData, setSubmitData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -190,7 +158,7 @@ function AddPlacedStudents() {
   const handleSubmit = async (validData) => {
     try {
       const response = await fetch(
-        `${api_url}server/add_placed_student_details.php`,
+        `${api_url}server/add_student_details.php`,
         {
           method: "POST",
           headers: {
@@ -219,7 +187,7 @@ function AddPlacedStudents() {
     <>
       <Navbar />
       <Typography variant="h4" align="center" gutterBottom>
-        Add Placed Students
+        Add Students
       </Typography>
       <Box display="flex" justifyContent="center" marginBottom={2}>
         <Button variant="contained" color="primary" style={{ marginRight: 16 }}>
@@ -278,4 +246,4 @@ function AddPlacedStudents() {
   );
 }
 
-export default AddPlacedStudents;
+export default AddStudents;

@@ -115,13 +115,13 @@ const Navbar = () => {
         return (
           <>
             <li
-              onClick={() => handleMenuClick("/view-branch-placed-students")}
+              onClick={() => handleMenuClick("/view-all-placed-students")}
               style={{ cursor: "pointer" }}
             >
               View Placed Student Details
             </li>
             <li
-              onClick={() => handleMenuClick("/branch-consolidated-report")}
+              onClick={() => handleMenuClick("/academic-consolidated-report")}
               style={{ cursor: "pointer" }}
             >
               View Consolidated Report

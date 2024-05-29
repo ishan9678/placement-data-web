@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
-import { ClipLoader } from "react-spinners";
 import PlacedStudentImage from "../assets/placed.svg";
-import api_url from "../apiconfig";
+import EditStudentImage from "../assets/student_details.svg";
 import Navbar from "../components/Navbar";
+import ClipLoader from "react-spinners/ClipLoader";
+import api_url from "../apiconfig";
 import "../styles/home.css";
 
-const AcademicAdvisorHome = () => {
+const AdminHome = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const AcademicAdvisorHome = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
+          console.log("User's Name:", data.name);
           setUser(data.name);
         } else {
           console.error("Error:", data.message);
@@ -28,7 +30,7 @@ const AcademicAdvisorHome = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <Navbar />
       <div className="container">
         <Card className="mainCard">
@@ -40,16 +42,28 @@ const AcademicAdvisorHome = () => {
                 </Typography>
                 <div className="optionsContainer">
                   <OptionCard
-                    title="View Placed Student Details"
-                    description="Click here to view details of placed students."
+                    title="Approve Users"
+                    description="Click here to aprrove users"
                     imageUrl={PlacedStudentImage}
-                    action={() => navigate("/view-all-placed-student-details")}
+                    action={() => navigate("/approve-users")}
                   />
                   <OptionCard
-                    title="View Consolidated Report"
-                    description="Click here to view the consolidated report."
-                    imageUrl={PlacedStudentImage}
-                    action={() => navigate("/academic-consolidated-report")}
+                    title="Add students"
+                    description="Click here to add students"
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/add-students")}
+                  />
+                  <OptionCard
+                    title="Edit student details"
+                    description="Click here to edit student details"
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/edit-students")}
+                  />
+                  <OptionCard
+                    title="Edit Faculty details"
+                    description="Click here to edit faculty details"
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/edit-faculties")}
                   />
                 </div>
               </>
@@ -63,7 +77,7 @@ const AcademicAdvisorHome = () => {
           </CardContent>
         </Card>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -97,4 +111,4 @@ const OptionCard = ({ title, description, imageUrl, action }) => {
   );
 };
 
-export default AcademicAdvisorHome;
+export default AdminHome;

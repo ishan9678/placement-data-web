@@ -21,11 +21,19 @@ import { gapi } from "gapi-script";
 import AdditionalDetails from "./pages/AdditionalDetails";
 import AddPlacedStudents from "./pages/AddPlacedStudents";
 import FaConsolidatedReport from "./pages/FaConsolidatedReport";
+import AdminHome from "./pages/AdminHome";
+import AddStudents from "./pages/AddStudents";
+import ProgramCoordinatorHome from "./pages/ProgramCoordinatorHome";
+import EditStudentDetails from "./pages/EditStudentDetails";
+import AcademicAdvisorConsolidatedReport from "./pages/AcademicAdivisorConslidatedReport";
+import EditFacultyDetails from "./pages/EditFacultyDetails";
+
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
 
 const App = () => {
   const [userRole, setUserRole] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     fetch(`${api_url}server/get_user_info.php`, {
@@ -36,6 +44,10 @@ const App = () => {
       .then((data) => {
         if (data.status === "success") {
           setUserRole(data.role);
+          setIsLoggedIn(true);
+        }
+        else{
+          setIsLoggedIn(false);
         }
       })
       .catch((error) => console.error("Fetch error:", error));
@@ -53,7 +65,7 @@ const App = () => {
 
   const renderHomeRoute = () => {
     if (userRole === "Admin") {
-      return <AdminDashboard />;
+      return <AdminHome />;
     } else if (userRole === "Faculty Advisor") {
       return <FaHome />;
     } else if (userRole === "Placement Coordinator") {
@@ -62,45 +74,33 @@ const App = () => {
       return <HodHome />;
     } else if (userRole === "Academic Advisor") {
       return <AcademicAdvisorHome />;
+    } else if (userRole === "Program Coordinator") {
+      return <ProgramCoordinatorHome />;
     }
-
     return null;
   };
 
   return (
     <Router>
-      <Routes>
+       <Routes>
         <Route path="/" element={<Login />} />
-        {userRole && <Route path="/home" element={renderHomeRoute()} />}
-        <Route path="/signup" element={<Signup />} />
-        <Route
-          path="/view-placed-student-details"
-          element={<ViewPlacedStudents />}
-        />
-        <Route
-          path="/view-branch-placed-students"
-          element={<ViewBranchPlacedStudents />}
-        />
-        <Route
-          path="/view-all-placed-student-details"
-          element={<ViewAllPlacedStudents />}
-        />
-        <Route
-          path="/add-placed-student-details"
-          element={<PlacedStudents />}
-        />
-        <Route path="/student-details" element={<AddPlacedStudents />} />
-        <Route
-          path="/branch-consolidated-report"
-          element={<BranchConsolidatedReport />}
-        />
-        <Route
-          path="/fa-consolidated-report"
-          element={<FaConsolidatedReport />}
-        />
-        <Route path="/consolidated-report" element={<ConsolidatedReport />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/additional-details" element={<AdditionalDetails />} />
+        {isLoggedIn && <Route path="/home" element={renderHomeRoute()} />}
+        { <Route path="/signup" element={<Signup />} />}
+        {isLoggedIn && userRole === "Faculty Advisor" && <Route path="/view-placed-student-details" element={<ViewPlacedStudents />} />}
+        {isLoggedIn && userRole === "Program Coordinator" && <Route path="/view-branch-placed-students" element={<ViewBranchPlacedStudents />} />}
+        {isLoggedIn && (userRole === "HOD" || userRole === "Placement Coordinator" || userRole === "Academic Advisor") &&  <Route path="/view-all-placed-student-details" element={<ViewAllPlacedStudents />} />}
+        {isLoggedIn && userRole === "Placement Coordinator" && <Route path="/add-placed-student-details" element={<AddPlacedStudents />} />}
+        {isLoggedIn && userRole === "Academic Advisor" && <Route path="/academic-consolidated-report" element={<AcademicAdvisorConsolidatedReport />} />}
+        {isLoggedIn && <Route path="/branch-consolidated-report" element={<BranchConsolidatedReport />} />}
+        {isLoggedIn &&  userRole === "Faculty Advisor" && <Route path="/fa-consolidated-report" element={<FaConsolidatedReport />} />}
+        {isLoggedIn && (userRole === "HOD" || userRole === "Placement Coordinator" || userRole === "Academic Advisor") && <Route path="/consolidated-report" element={<ConsolidatedReport />} />}
+        { <Route path="/reset-password" element={<ResetPassword />} />}
+        { <Route path="/additional-details" element={<AdditionalDetails />} />}
+        {/* Admin */}
+        {isLoggedIn && userRole ==="Admin" && <Route path="/approve-users" element={<AdminDashboard />} />}
+        {isLoggedIn && userRole ==="Admin" && <Route path="/add-students" element={<AddStudents />} />}
+        {isLoggedIn && userRole ==="Admin" && <Route path="/edit-students" element={<EditStudentDetails />} />}
+        {isLoggedIn && userRole === "Admin" && <Route path="/edit-faculties" element={<EditFacultyDetails />} />}
       </Routes>
     </Router>
   );

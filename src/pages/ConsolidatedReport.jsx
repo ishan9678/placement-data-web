@@ -8,6 +8,10 @@ import {
   TableRow,
   Button,
   Paper,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import {
   BarChart,
@@ -31,6 +35,9 @@ import { useReactToPrint } from "react-to-print";
 
 function ConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
+  const [departmentStatistics, setDepartmentStatistics] = useState([]);
+  const [batch, setBatch] = useState(2025);
+  const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
     marquee: 0,
@@ -41,11 +48,24 @@ function ConsolidatedReport() {
     totalOffers: 0,
     totalCount: 0,
     notPlaced: 0,
+    uniqueCount: 0,
+  });
+
+  const [departmentStatisticsTotal, setDepartmentStatisticsTotal] = useState({
+    totalCount: 0,
+    supersetEnrolledCount: 0,
+    marquee: 0,
+    superDream: 0,
+    dream: 0,
+    daySharing: 0,
+    internship: 0,
+    totalOffers: 0,
+    uniqueCount: 0,
   });
 
   useEffect(() => {
     // Fetch consolidated report data
-    fetch(`${api_url}server/get_consolidated_report.php`, {
+    fetch(`${api_url}server/get_consolidated_report.php?batch=${batch}`, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -53,12 +73,37 @@ function ConsolidatedReport() {
         if (data.status === "success") {
           setConsolidatedReport(data.consolidatedReport);
           calculateTotal(data.consolidatedReport);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
         } else {
           console.error("Error:", data.message);
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [batch]);
+
+  useEffect(() => {
+    //fetch dept statistics
+    fetch(`${api_url}server/get_all_department_statistics.php?batch=${batch}`, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setDepartmentStatistics(data.departmentStatistics);
+          calculateDepartmentTotal(data.departmentStatistics);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, [batch]);
 
   const calculateTotal = (data) => {
     let newTotal = {
@@ -71,6 +116,7 @@ function ConsolidatedReport() {
       totalOffers: 0,
       totalCount: 0,
       notPlaced: 0,
+      uniqueCount: 0,
     };
 
     data.forEach((advisor) => {
@@ -80,10 +126,44 @@ function ConsolidatedReport() {
         }
       });
 
-      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.totalOffers;
+      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.uniqueCount;
     });
 
     setTotal(newTotal);
+  };
+
+  const calculateDepartmentTotal = (data) => {
+    let newDepartmentTotal = {
+      totalCount: 0,
+      supersetEnrolledCount: 0,
+      marquee: 0,
+      superDream: 0,
+      dream: 0,
+      daySharing: 0,
+      internship: 0,
+      totalOffers: 0,
+      uniqueCount: 0,
+    };
+
+    Object.values(data).forEach((department) => {
+      Object.keys(department).forEach((key) => {
+        if (key !== "supersetEnrolledCount" && key !== "totalCount") {
+          newDepartmentTotal[key] += parseInt(department[key], 10);
+        }
+      });
+      newDepartmentTotal.supersetEnrolledCount +=
+        department.supersetEnrolledCount;
+      newDepartmentTotal.totalCount += department.totalCount;
+      // newDepartmentTotal.totalOffers += department.totalOffers;
+      // newDepartmentTotal.uniqueCount += department.uniqueCount;
+      // newDepartmentTotal.marquee += department.marquee;
+      // newDepartmentTotal.superDream += department.superDream;
+      // newDepartmentTotal.dream += newDepartmentTotal.dream;
+      // newDepartmentTotal.daySharing += newDepartmentTotal.daySharing;
+      // newDepartmentTotal.internship += newDepartmentTotal.internship;
+    });
+
+    setDepartmentStatisticsTotal(newDepartmentTotal);
   };
 
   const offersCategoriesChartData = [
@@ -109,6 +189,10 @@ function ConsolidatedReport() {
     content: () => componentRef.current,
   });
 
+  const handleBatchChange = (event) => {
+    setBatch(event.target.value);
+  };
+
   return (
     <div>
       <Navbar />
@@ -116,10 +200,35 @@ function ConsolidatedReport() {
         ref={componentRef}
         style={{ maxHeight: "720px", marginTop: "200px" }}
       >
+        {/* select batch */}
         <div>
-          <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h2 style={{ textAlign: "center" }}>
             Consolidated Report For All Students
           </h2>
+          <div>
+            <FormControl className="form-control">
+              <InputLabel htmlFor="batch">Batch</InputLabel>{" "}
+              <Select
+                name="batch"
+                label="batch"
+                id="batch"
+                value={batch}
+                defaultValue={2025}
+                onChange={handleBatchChange}
+                style={{ color: "black", minWidth: 120, marginBottom: "20px" }} // Adjust minWidth as needed
+              >
+                {[...Array(2051 - 2022).keys()].map((year) => (
+                  <MenuItem
+                    key={2022 + year}
+                    value={2022 + year}
+                    style={{ color: "black" }}
+                  >
+                    {2022 + year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
           {/* table 1 */}
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
@@ -139,6 +248,7 @@ function ConsolidatedReport() {
                   <TableCell>Day Sharing</TableCell>
                   <TableCell>Internship Offers</TableCell>
                   <TableCell>Total Offers</TableCell>
+                  <TableCell>Unique Offers</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -153,6 +263,7 @@ function ConsolidatedReport() {
                     <TableCell>{advisor.daySharing}</TableCell>
                     <TableCell>{advisor.internship}</TableCell>
                     <TableCell>{advisor.totalOffers}</TableCell>
+                    <TableCell>{advisor.uniqueCount}</TableCell>
                   </TableRow>
                 ))}
                 <TableRow
@@ -182,6 +293,9 @@ function ConsolidatedReport() {
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {total.totalOffers}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {total.uniqueCount}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -214,16 +328,16 @@ function ConsolidatedReport() {
                     <TableCell>{advisor.facultyAdvisorSection}</TableCell>
                     <TableCell>{advisor.totalCount}</TableCell>
                     <TableCell>{advisor.supersetEnrolledCount}</TableCell>
-                    <TableCell>{advisor.totalOffers}</TableCell>
+                    <TableCell>{advisor.uniqueCount}</TableCell>
                     <TableCell>
                       {(
-                        (advisor.totalOffers / advisor.supersetEnrolledCount) *
+                        (advisor.uniqueCount / advisor.supersetEnrolledCount) *
                         100
                       ).toFixed(2)}
                       %
                     </TableCell>
                     <TableCell>
-                      {advisor.supersetEnrolledCount - advisor.totalOffers}
+                      {advisor.supersetEnrolledCount - advisor.uniqueCount}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -241,9 +355,16 @@ function ConsolidatedReport() {
                     {total.supersetEnrolledCount}
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
-                    {total.totalOffers}
+                    {total.uniqueCount}
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {" "}
+                    {(
+                      (total.uniqueCount / total.supersetEnrolledCount) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {total.notPlaced}
                   </TableCell>
@@ -252,16 +373,113 @@ function ConsolidatedReport() {
             </Table>
           </TableContainer>
 
+          {/*Department Statistics*/}
+          <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+            <Table size="small" aria-label="branch-statistics">
+              <TableHead>
+                <TableRow
+                  sx={{
+                    backgroundColor: "#00afef",
+                    color: "white",
+                  }}
+                >
+                  <TableCell>Department</TableCell>
+                  <TableCell>Total Count</TableCell>
+                  <TableCell>Superset Enrolled</TableCell>
+                  <TableCell>Marquee</TableCell>
+                  <TableCell>Super Dream</TableCell>
+                  <TableCell>Dream</TableCell>
+                  <TableCell>Day Sharing</TableCell>
+                  <TableCell>Internship</TableCell>
+                  <TableCell>Total Offers</TableCell>
+                  <TableCell>Percentage %</TableCell>
+                  <TableCell>Unique Offers</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Object.entries(departmentStatistics).map(
+                  ([department, stats]) => (
+                    <TableRow key={department}>
+                      <TableCell>{department}</TableCell>
+                      <TableCell>{stats.totalCount}</TableCell>
+                      <TableCell>{stats.supersetEnrolledCount}</TableCell>
+                      <TableCell>{stats.marquee}</TableCell>
+                      <TableCell>{stats.superDream}</TableCell>
+                      <TableCell>{stats.dream}</TableCell>
+                      <TableCell>{stats.daySharing}</TableCell>
+                      <TableCell>{stats.internship}</TableCell>
+                      <TableCell>{stats.totalOffers}</TableCell>
+                      <TableCell>
+                        {(
+                          (stats.totalOffers / stats.supersetEnrolledCount) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </TableCell>
+                      <TableCell>{stats.uniqueCount}</TableCell>
+                    </TableRow>
+                  )
+                )}
+                <TableRow
+                  sx={{
+                    backgroundColor: "#f0f0f0",
+                  }}
+                >
+                  <TableCell>
+                    <strong>Total</strong>
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.totalCount}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.supersetEnrolledCount}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.marquee}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.superDream}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.dream}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.daySharing}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.internship}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.totalOffers}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {(
+                      (departmentStatisticsTotal.totalOffers /
+                        departmentStatisticsTotal.supersetEnrolledCount) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "800" }}>
+                    {departmentStatisticsTotal.uniqueCount}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
           {/*Salary*/}
-          <SalaryCategorisation
-            apiUrl={`${api_url}server/get_salary_categorisation.php`}
-          />
-
+          {shouldRender && (
+            <SalaryCategorisation
+              apiUrl={`${api_url}server/get_salary_categorisation.php?batch=${batch}`}
+            />
+          )}
           {/*Marquee*/}
-          <MarqueeStudents
-            apiUrl={`${api_url}/server/get_marquee_students.php`}
-          />
-
+          {shouldRender && (
+            <MarqueeStudents
+              apiUrl={`${api_url}/server/get_marquee_students.php?batch=${batch}`}
+            />
+          )}
           {/*Offer Summary*/}
           <div style={{ maxWidth: "50%", margin: "0 auto" }}>
             <h3>Offer Summary</h3>
@@ -322,7 +540,6 @@ function ConsolidatedReport() {
               </Table>
             </TableContainer>
           </div>
-
           {/* Offers under various categories Graph*/}
           <div style={{ maxWidth: "80%", margin: "0 auto" }}>
             <h3>Offers under various Categories</h3>
@@ -360,13 +577,17 @@ function ConsolidatedReport() {
             </ResponsiveContainer>
           </div>
           {/* Student Statistics */}
-          <StudentStatistics
-            apiUrl={`${api_url}server/get_student_statistics.php`}
-          />
+          {shouldRender && (
+            <StudentStatistics
+              apiUrl={`${api_url}server/get_student_statistics.php?batch=${batch}`}
+            />
+          )}
           {/*Salary Statistics */}
-          <SalaryStatistics
-            apiUrl={`${api_url}server/get_salary_statistics.php`}
-          />
+          {shouldRender && (
+            <SalaryStatistics
+              apiUrl={`${api_url}server/get_salary_statistics.php?batch=${batch}`}
+            />
+          )}
         </div>
         <Button
           className="print-button"

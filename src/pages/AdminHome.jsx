@@ -44,7 +44,7 @@ const AdminHome = () => {
                   <OptionCard
                     title="Approve Users"
                     description="Click here to aprrove users"
-                    imageUrl={PlacedStudentImage}
+                    imageUrl={EditStudentImage}
                     action={() => navigate("/approve-users")}
                   />
                   <OptionCard

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import { ClipLoader } from "react-spinners";
 import PlacedStudentImage from "../assets/placed.svg";
+import EditStudentImage from "../assets/student_details.svg";
 import api_url from "../apiconfig";
 import Navbar from "../components/Navbar";
 import "../styles/home.css";
@@ -42,13 +43,19 @@ const AcademicAdvisorHome = () => {
                   <OptionCard
                     title="View Placed Student Details"
                     description="Click here to view details of placed students."
-                    imageUrl={PlacedStudentImage}
+                    imageUrl={EditStudentImage}
                     action={() => navigate("/view-all-placed-student-details")}
+                  />
+                  <OptionCard
+                    title="Search Placed Student Details"
+                    description="Click here to search details of placed students."
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/academic-search-placed-students")}
                   />
                   <OptionCard
                     title="View Consolidated Report"
                     description="Click here to view the consolidated report."
-                    imageUrl={PlacedStudentImage}
+                    imageUrl={EditStudentImage}
                     action={() => navigate("/academic-consolidated-report")}
                   />
                 </div>

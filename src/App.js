@@ -27,6 +27,10 @@ import ProgramCoordinatorHome from "./pages/ProgramCoordinatorHome";
 import EditStudentDetails from "./pages/EditStudentDetails";
 import AcademicAdvisorConsolidatedReport from "./pages/AcademicAdivisorConslidatedReport";
 import EditFacultyDetails from "./pages/EditFacultyDetails";
+import ViewHigherStudiesStudents from "./pages/ViewHigherStudiesStudents";
+import ViewEntrepreneurStudents from "./pages/ViewEntrepreneurStudents";
+import EditPlacedStudents from "./pages/EditPlacedStudents";
+import AcademicSearchPlacedStudents from "./pages/AcademicSearchPlacedStudents";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -45,8 +49,7 @@ const App = () => {
         if (data.status === "success") {
           setUserRole(data.role);
           setIsLoggedIn(true);
-        }
-        else{
+        } else {
           setIsLoggedIn(false);
         }
       })
@@ -82,25 +85,103 @@ const App = () => {
 
   return (
     <Router>
-       <Routes>
+      <Routes>
         <Route path="/" element={<Login />} />
         {isLoggedIn && <Route path="/home" element={renderHomeRoute()} />}
-        { <Route path="/signup" element={<Signup />} />}
-        {isLoggedIn && userRole === "Faculty Advisor" && <Route path="/view-placed-student-details" element={<ViewPlacedStudents />} />}
-        {isLoggedIn && userRole === "Program Coordinator" && <Route path="/view-branch-placed-students" element={<ViewBranchPlacedStudents />} />}
-        {isLoggedIn && (userRole === "HOD" || userRole === "Placement Coordinator" || userRole === "Academic Advisor") &&  <Route path="/view-all-placed-student-details" element={<ViewAllPlacedStudents />} />}
-        {isLoggedIn && userRole === "Placement Coordinator" && <Route path="/add-placed-student-details" element={<AddPlacedStudents />} />}
-        {isLoggedIn && userRole === "Academic Advisor" && <Route path="/academic-consolidated-report" element={<AcademicAdvisorConsolidatedReport />} />}
-        {isLoggedIn && <Route path="/branch-consolidated-report" element={<BranchConsolidatedReport />} />}
-        {isLoggedIn &&  userRole === "Faculty Advisor" && <Route path="/fa-consolidated-report" element={<FaConsolidatedReport />} />}
-        {isLoggedIn && (userRole === "HOD" || userRole === "Placement Coordinator" || userRole === "Academic Advisor") && <Route path="/consolidated-report" element={<ConsolidatedReport />} />}
-        { <Route path="/reset-password" element={<ResetPassword />} />}
-        { <Route path="/additional-details" element={<AdditionalDetails />} />}
+        {<Route path="/signup" element={<Signup />} />}
+        {isLoggedIn && userRole === "Faculty Advisor" && (
+          <Route
+            path="/view-placed-student-details"
+            element={<ViewPlacedStudents />}
+          />
+        )}
+        {isLoggedIn && userRole === "Faculty Advisor" && (
+          <Route
+            path="/view-higher-studies-student-details"
+            element={<ViewHigherStudiesStudents />}
+          />
+        )}
+        {isLoggedIn && userRole === "Faculty Advisor" && (
+          <Route
+            path="/view-entrepreneur-student-details"
+            element={<ViewEntrepreneurStudents />}
+          />
+        )}
+        {isLoggedIn && userRole === "Program Coordinator" && (
+          <Route
+            path="/view-branch-placed-students"
+            element={<ViewBranchPlacedStudents />}
+          />
+        )}
+        {isLoggedIn &&
+          (userRole === "HOD" ||
+            userRole === "Placement Coordinator" ||
+            userRole === "Academic Advisor") && (
+            <Route
+              path="/view-all-placed-student-details"
+              element={<ViewAllPlacedStudents />}
+            />
+          )}
+        {isLoggedIn && userRole === "Placement Coordinator" && (
+          <Route
+            path="/add-placed-student-details"
+            element={<AddPlacedStudents />}
+          />
+        )}
+        {isLoggedIn && userRole === "Academic Advisor" && (
+          <Route
+            path="/academic-consolidated-report"
+            element={<AcademicAdvisorConsolidatedReport />}
+          />
+        )}
+        {isLoggedIn && userRole === "Academic Advisor" && (
+          <Route
+            path="/academic-search-placed-students"
+            element={<AcademicSearchPlacedStudents />}
+          />
+        )}
+        {isLoggedIn && (
+          <Route
+            path="/branch-consolidated-report"
+            element={<BranchConsolidatedReport />}
+          />
+        )}
+        {isLoggedIn && userRole === "Faculty Advisor" && (
+          <Route
+            path="/fa-consolidated-report"
+            element={<FaConsolidatedReport />}
+          />
+        )}
+        {isLoggedIn && userRole === "Placement Coordinator" && (
+          <Route
+            path="/edit-placed-students"
+            element={<EditPlacedStudents />}
+          />
+        )}
+        {isLoggedIn &&
+          (userRole === "HOD" ||
+            userRole === "Placement Coordinator" ||
+            userRole === "Academic Advisor") && (
+            <Route
+              path="/consolidated-report"
+              element={<ConsolidatedReport />}
+            />
+          )}
+        {<Route path="/reset-password" element={<ResetPassword />} />}
+        {<Route path="/additional-details" element={<AdditionalDetails />} />}
         {/* Admin */}
-        {isLoggedIn && userRole ==="Admin" && <Route path="/approve-users" element={<AdminDashboard />} />}
-        {isLoggedIn && userRole ==="Admin" && <Route path="/add-students" element={<AddStudents />} />}
-        {isLoggedIn && userRole ==="Admin" && <Route path="/edit-students" element={<EditStudentDetails />} />}
-        {isLoggedIn && userRole === "Admin" && <Route path="/edit-faculties" element={<EditFacultyDetails />} />}
+        {isLoggedIn && userRole === "Admin" && (
+          <Route path="/approve-users" element={<AdminDashboard />} />
+        )}
+        {isLoggedIn && userRole === "Admin" && (
+          <Route path="/add-students" element={<AddStudents />} />
+        )}
+        {isLoggedIn && userRole === "Admin" && (
+          <Route path="/edit-students" element={<EditStudentDetails />} />
+        )}
+        {isLoggedIn && userRole === "Admin" && (
+          <Route path="/edit-faculties" element={<EditFacultyDetails />} />
+        )}
       </Routes>
     </Router>
   );

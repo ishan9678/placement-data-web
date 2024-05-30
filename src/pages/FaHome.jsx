@@ -44,8 +44,24 @@ const FaHome = () => {
                   <OptionCard
                     title="Placed Student Details"
                     description="Click here to view details of placed students."
-                    imageUrl={PlacedStudentImage}
+                    imageUrl={EditStudentImage}
                     action={() => navigate("/view-placed-student-details")}
+                  />
+                  <OptionCard
+                    title="Higher Studies Student Details"
+                    description="Click here to view details of higher studies students."
+                    imageUrl={EditStudentImage}
+                    action={() =>
+                      navigate("/view-higher-studies-student-details")
+                    }
+                  />
+                  <OptionCard
+                    title="Entrepreneur Student Details"
+                    description="Click here to view details of Entrepreneur students."
+                    imageUrl={EditStudentImage}
+                    action={() =>
+                      navigate("/view-entrepreneur-student-details")
+                    }
                   />
                   <OptionCard
                     title="View Consilidated Report"

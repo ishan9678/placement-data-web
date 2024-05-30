@@ -38,6 +38,7 @@ function SalaryStatistics({ apiUrl }) {
               }}
             >
               <TableCell>Category</TableCell>
+              <TableCell align="center">Name</TableCell>
               <TableCell align="center">In Lakhs Per Annum</TableCell>
               <TableCell align="center">Company</TableCell>
             </TableRow>
@@ -47,13 +48,25 @@ function SalaryStatistics({ apiUrl }) {
               <TableCell component="th" scope="row">
                 Highest Salary
               </TableCell>
+              <TableCell align="center">{statistics.max_name}</TableCell>
               <TableCell align="center">{statistics.max_package} LPA</TableCell>
               <TableCell align="center">{statistics.max_company}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row">
+                Median Salary
+              </TableCell>
+              <TableCell align="center">{statistics.median_name}</TableCell>
+              <TableCell align="center">
+                {statistics.median_package} LPA
+              </TableCell>
+              <TableCell align="center">{statistics.median_company}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">
                 Lowest Salary
               </TableCell>
+              <TableCell align="center">{statistics.min_name}</TableCell>
               <TableCell align="center">{statistics.min_package} LPA</TableCell>
               <TableCell align="center">{statistics.min_company}</TableCell>
             </TableRow>
@@ -65,6 +78,7 @@ function SalaryStatistics({ apiUrl }) {
               <TableCell component="th" scope="row" sx={{ fontWeight: "800" }}>
                 Average Salary
               </TableCell>
+              <TableCell></TableCell>
               <TableCell align="center" sx={{ fontWeight: "800" }}>
                 {statistics.avg_package} LPA
               </TableCell>

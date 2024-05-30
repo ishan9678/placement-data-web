@@ -60,7 +60,23 @@ const Navbar = () => {
               Placed Student Details
             </li>
             <li
-              onClick={() => handleMenuClick("/student-details")}
+              onClick={() =>
+                handleMenuClick("/view-higher-studies-student-details")
+              }
+              style={{ cursor: "pointer" }}
+            >
+              Higher Studies Student Details
+            </li>
+            <li
+              onClick={() =>
+                handleMenuClick("/view-entrepreneur-student-details")
+              }
+              style={{ cursor: "pointer" }}
+            >
+              Entrepreneur Student Details
+            </li>
+            <li
+              onClick={() => handleMenuClick("/fa-consolidated-report")}
               style={{ cursor: "pointer" }}
             >
               View Consolidated Report
@@ -83,6 +99,12 @@ const Navbar = () => {
               style={{ cursor: "pointer" }}
             >
               View Placed Student Details
+            </li>
+            <li
+              onClick={() => handleMenuClick("/edit-placed-students")}
+              style={{ cursor: "pointer" }}
+            >
+              Edit Placed Students
             </li>
             <li
               onClick={() => handleMenuClick("/consolidated-report")}
@@ -119,6 +141,14 @@ const Navbar = () => {
               style={{ cursor: "pointer" }}
             >
               View Placed Student Details
+            </li>
+            <li
+              onClick={() =>
+                handleMenuClick("/academic-search-placed-students")
+              }
+              style={{ cursor: "pointer" }}
+            >
+              Search Placed Students
             </li>
             <li
               onClick={() => handleMenuClick("/academic-consolidated-report")}

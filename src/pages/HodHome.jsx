@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import PlacedStudentImage from "../assets/placed.svg";
+import EditStudentImage from "../assets/student_details.svg";
 import { ClipLoader } from "react-spinners";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
@@ -41,13 +42,13 @@ const HodHome = () => {
                 <OptionCard
                   title="View Placed Student Details"
                   description="Click here to view details of placed students."
-                  imageUrl={PlacedStudentImage}
+                  imageUrl={EditStudentImage}
                   action={() => navigate("/view-all-placed-student-details")}
                 />
                 <OptionCard
                   title="View Consolidated Report"
                   description="Click here to view the consolidated report."
-                  imageUrl={PlacedStudentImage}
+                  imageUrl={EditStudentImage}
                   action={() => navigate("/consolidated-report")}
                 />
               </div>

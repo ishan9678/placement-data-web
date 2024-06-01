@@ -17,8 +17,25 @@ function EditPlacedStudents() {
   // const [editRowsModel, setEditRowsModel] = useState({});
   const [studentData, setStudentData] = useState([]);
   const [showSave, setShowSave] = useState(false);
+  const [department, setDepartment] = useState("");
 
   const styles = useStyles();
+
+  useEffect(() => {
+    fetch(`${api_url}server/get_user_info.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setDepartment(data.department);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, []);
 
   const columns = [
     {
@@ -49,6 +66,36 @@ function EditPlacedStudents() {
     //   minWidth: 150,
     //   editable: true,
     // },
+    {
+      field: "department",
+      headerName: "Department",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      renderEditCell: (params) => (
+        <TextField
+          select
+          SelectProps={{
+            native: true,
+          }}
+          value={params.value}
+          onChange={(e) => {
+            const newValue = e.target.value;
+            params.api.setEditCellValue({
+              id: params.id,
+              field: params.field,
+              value: newValue,
+            });
+          }}
+          fullWidth
+        >
+          <option value="CINTEL">CINTEL</option>
+          <option value="DSBS">DSBS</option>
+          <option value="CTECH">CTECH</option>
+          <option value="NWC">NWC</option>
+        </TextField>
+      ),
+    },
     {
       field: "specialization",
       headerName: "Specialization",
@@ -105,6 +152,7 @@ function EditPlacedStudents() {
           <option value="Higher Studies">Higher Studies</option>
           <option value="Entrepreneur">Entrepreneur</option>
           <option value="Arrear/Detained">Arrear/Detained</option>
+          <option value="None">None</option>
         </TextField>
       ),
     },
@@ -173,7 +221,9 @@ function EditPlacedStudents() {
     setSearchValue(value);
 
     // Make a request to the PHP file to get student details based on the register number
-    fetch(`${api_url}server/get_students_by_search.php?registerNumber=${value}`)
+    fetch(
+      `${api_url}server/get_students_by_search.php?registerNumber=${value}&department=${department}`
+    )
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data.student)) {
@@ -253,7 +303,9 @@ function EditPlacedStudents() {
   return (
     <div>
       <Navbar />
-      <h1 style={{ textAlign: "center" }}>Edit Placed Student Details</h1>
+      <h1 style={{ textAlign: "center" }}>
+        Edit Placed Student Details in {department}
+      </h1>
       <div style={{ minWidth: "60rem" }}>
         <TextField
           fullWidth

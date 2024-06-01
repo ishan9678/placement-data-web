@@ -137,7 +137,9 @@ const Navbar = () => {
         return (
           <>
             <li
-              onClick={() => handleMenuClick("/view-all-placed-students")}
+              onClick={() =>
+                handleMenuClick("/view-all-placed-student-details")
+              }
               style={{ cursor: "pointer" }}
             >
               View Placed Student Details

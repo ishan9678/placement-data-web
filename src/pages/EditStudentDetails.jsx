@@ -50,6 +50,36 @@ function EditStudentDetails() {
     //   editable: true,
     // },
     {
+      field: "department",
+      headerName: "Department",
+      flex: 1,
+      minWidth: 150,
+      editable: true,
+      renderEditCell: (params) => (
+        <TextField
+          select
+          SelectProps={{
+            native: true,
+          }}
+          value={params.value}
+          onChange={(e) => {
+            const newValue = e.target.value;
+            params.api.setEditCellValue({
+              id: params.id,
+              field: params.field,
+              value: newValue,
+            });
+          }}
+          fullWidth
+        >
+          <option value="CINTEL">CINTEL</option>
+          <option value="DSBS">DSBS</option>
+          <option value="CTECH">CTECH</option>
+          <option value="NWC">NWC</option>
+        </TextField>
+      ),
+    },
+    {
       field: "specialization",
       headerName: "Specialization",
       flex: 1,
@@ -105,6 +135,7 @@ function EditStudentDetails() {
           <option value="Higher Studies">Higher Studies</option>
           <option value="Entrepreneur">Entrepreneur</option>
           <option value="Arrear/Detained">Arrear/Detained</option>
+          <option value="None">None</option>
         </TextField>
       ),
     },

@@ -81,6 +81,22 @@ const fields = [
     ],
   },
   {
+    label: "Department",
+    key: "department",
+    alternateMatches: [],
+    fieldType: {
+      type: "input",
+    },
+    example: "CINTEL",
+    validations: [
+      {
+        rule: "required",
+        errorMessage: "Department is required",
+        level: "error",
+      },
+    ],
+  },
+  {
     label: "Specialization",
     key: "specialization",
     alternateMatches: [],

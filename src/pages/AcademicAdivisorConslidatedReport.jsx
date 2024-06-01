@@ -37,6 +37,7 @@ function AcademicAdvisorConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
   const [departmentStatistics, setDepartmentStatistics] = useState([]);
   const [batch, setBatch] = useState(2025);
+  const [department, setDepartment] = useState("");
   const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
@@ -64,10 +65,30 @@ function AcademicAdvisorConsolidatedReport() {
   });
 
   useEffect(() => {
-    // Fetch consolidated report data
-    fetch(`${api_url}server/get_consolidated_report.php?batch=${batch}`, {
+    fetch(`${api_url}server/get_user_info.php`, {
       method: "GET",
+      credentials: "include",
     })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setBatch(data.batch);
+          setDepartment(data.department);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, []);
+
+  useEffect(() => {
+    // Fetch consolidated report data
+    fetch(
+      `${api_url}server/get_consolidated_report.php?batch=${batch}&department=${department}`,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
@@ -82,13 +103,16 @@ function AcademicAdvisorConsolidatedReport() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, [batch]);
+  }, [batch, department]);
 
   useEffect(() => {
     //fetch dept statistics
-    fetch(`${api_url}server/get_all_department_statistics.php?batch=${batch}`, {
-      method: "GET",
-    })
+    fetch(
+      `${api_url}server/get_all_department_statistics.php?batch=${batch}&department=${department}`,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
@@ -103,24 +127,7 @@ function AcademicAdvisorConsolidatedReport() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, [batch]);
-
-  useEffect(() => {
-    fetch(`${api_url}server/get_user_info.php`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          console.log("User's Batch:", data.batch);
-          setBatch(data.batch);
-        } else {
-          console.error("Error:", data.message);
-        }
-      })
-      .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [batch, department]);
 
   const calculateTotal = (data) => {
     let newTotal = {
@@ -230,7 +237,7 @@ function AcademicAdvisorConsolidatedReport() {
                 value={batch}
                 defaultValue={2025}
                 onChange={handleBatchChange}
-                style={{ color: "black", minWidth: 120, marginBottom: "20px" }} // Adjust minWidth as needed
+                style={{ color: "black", minWidth: 120, marginBottom: "20px" }}
               >
                 {[...Array(2051 - 2022).keys()].map((year) => (
                   <MenuItem
@@ -487,13 +494,13 @@ function AcademicAdvisorConsolidatedReport() {
           {/*Salary*/}
           {shouldRender && (
             <SalaryCategorisation
-              apiUrl={`${api_url}server/get_salary_categorisation.php?batch=${batch}`}
+              apiUrl={`${api_url}server/get_salary_categorisation.php?batch=${batch}&department=${department}`}
             />
           )}
           {/*Marquee*/}
           {shouldRender && (
             <MarqueeStudents
-              apiUrl={`${api_url}/server/get_marquee_students.php?batch=${batch}`}
+              apiUrl={`${api_url}/server/get_marquee_students.php?batch=${batch}&department=${department}`}
             />
           )}
           {/*Offer Summary*/}
@@ -595,13 +602,13 @@ function AcademicAdvisorConsolidatedReport() {
           {/* Student Statistics */}
           {shouldRender && (
             <StudentStatistics
-              apiUrl={`${api_url}server/get_student_statistics.php?batch=${batch}`}
+              apiUrl={`${api_url}server/get_student_statistics.php?batch=${batch}&department=${department}`}
             />
           )}
           {/*Salary Statistics */}
           {shouldRender && (
             <SalaryStatistics
-              apiUrl={`${api_url}server/get_salary_statistics.php?batch=${batch}`}
+              apiUrl={`${api_url}server/get_salary_statistics.php?batch=${batch}&department=${department}`}
             />
           )}
         </div>

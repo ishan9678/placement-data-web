@@ -20,6 +20,7 @@ const Signup = () => {
     employeeId: "",
     emailId: "",
     role: "",
+    department: "",
     specialization: "",
     batch: "",
     password: "",
@@ -31,6 +32,41 @@ const Signup = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const specializations = {
+    CINTEL: [
+      "AI",
+      "AI/ML",
+      "SWE",
+      "Int. M.Tech. in AI",
+      "Int. M.Tech. CSE w/s  in CC",
+      "M. Tech. AI",
+      "M. Tech. AI&DS",
+      "NA",
+    ],
+    DSBS: [
+      "B.Tech. – Computer Science And Engineering with Specialization in Big Data Analytics",
+      "B.Tech. – Computer Science And Engineering with Specialization in Blockchain Technology",
+      "B.Tech. – Computer Science And Engineering with Specialization in Gaming Technology",
+      "B.Tech. Computer Science And Engineering (Data Science)",
+      "B.Tech. in Computer Science and Business Systems (In Collaboration with TCS)",
+      "M.Tech. (Integrated) – Computer Science And Engineering with Specialization in Data Science",
+      "NA",
+    ],
+    CTECH: ["Computer Science and Engineering", "NA"],
+    NWC: [
+      "B.Tech - Cloud Computing",
+      "B.Tech - Computer Networking",
+      "B.Tech - Cyber Security",
+      "B.Tech - Information Technology",
+      "B.Tech - Internet of Things",
+      "M.Tech - Cloud Computing",
+      "M.Tech - Information Security and Cyber Forensics",
+      "M.Tech - Internet of Things",
+      "M.Tech (Integrated) - Cyber Security and Digital  Forensics",
+      "NA",
+    ],
+  };
+
   const handleSignup = async (event) => {
     event.preventDefault();
 
@@ -40,6 +76,7 @@ const Signup = () => {
       !formData.employeeId ||
       !formData.emailId ||
       !formData.role ||
+      !formData.department ||
       !formData.specialization ||
       !formData.batch ||
       !formData.password
@@ -84,7 +121,11 @@ const Signup = () => {
         {/* <div className="logo">
           <img src={srm_logo} alt="logo" />
         </div> */}
-        <form onSubmit={handleSignup} className="form-container">
+        <form
+          onSubmit={handleSignup}
+          className="form-container"
+          style={{ maxHeight: "720px", marginTop: "100px" }}
+        >
           <h2 className="form-heading">Registration</h2>
           <TextField
             label="Name"
@@ -148,6 +189,31 @@ const Signup = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal" className="form-control">
+            <InputLabel htmlFor="department">Department</InputLabel>
+            <Select
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              required
+              label="Department"
+              style={{ color: "black" }}
+            >
+              <MenuItem value="CINTEL" style={{ color: "black" }}>
+                CINTEL
+              </MenuItem>
+              <MenuItem value="DSBS" style={{ color: "black" }}>
+                DSBS
+              </MenuItem>
+              <MenuItem value="CTECH" style={{ color: "black" }}>
+                CTECH
+              </MenuItem>
+              <MenuItem value="NWC" style={{ color: "black" }}>
+                NWC
+              </MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth margin="normal" className="form-control">
             <InputLabel htmlFor="specialization">Specialization</InputLabel>
             <Select
               name="specialization"
@@ -157,18 +223,11 @@ const Signup = () => {
               label="Specialization"
               style={{ color: "black" }}
             >
-              <MenuItem value="AI" style={{ color: "black" }}>
-                AI
-              </MenuItem>
-              <MenuItem value="AI/ML" style={{ color: "black" }}>
-                AI/ML
-              </MenuItem>
-              <MenuItem value="SWE" style={{ color: "black" }}>
-                SWE
-              </MenuItem>
-              <MenuItem value="NA" style={{ color: "black" }}>
-                NA
-              </MenuItem>
+              {specializations[formData.department]?.map((spec) => (
+                <MenuItem key={spec} value={spec} style={{ color: "black" }}>
+                  {spec}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 

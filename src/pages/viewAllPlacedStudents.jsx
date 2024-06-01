@@ -23,6 +23,7 @@ function ViewAllPlacedStudents() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [companies, setCompanies] = useState([]);
   const [role, setRole] = useState();
+  const [department, setDepartment] = useState("");
 
   useEffect(() => {
     fetch(`${api_url}server/get_user_info.php`, {
@@ -33,6 +34,7 @@ function ViewAllPlacedStudents() {
       .then((data) => {
         if (data.status === "success") {
           setRole(data.role);
+          setDepartment(data.department);
         } else {
           console.error("Error:", data.message);
         }
@@ -42,10 +44,13 @@ function ViewAllPlacedStudents() {
 
   useEffect(() => {
     // Fetch faculty advisors
-    fetch(`${api_url}server/get_faculty_advisors.php`, {
-      method: "GET",
-      credentials: "include",
-    })
+    fetch(
+      `${api_url}server/get_faculty_advisors.php?department=${department}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
@@ -57,7 +62,7 @@ function ViewAllPlacedStudents() {
       .catch((error) => console.error("Fetch error:", error));
 
     // Fetch companies
-    fetch(`${api_url}server/get_companies.php`, {
+    fetch(`${api_url}server/get_companies.php?department=${department}`, {
       method: "GET",
       credentials: "include",
     })
@@ -70,10 +75,11 @@ function ViewAllPlacedStudents() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [department]);
 
   const fetchPlacedStudents = (advisor, company) => {
     let url = `${api_url}server/get_placed_student_details.php?`;
+    url += "department=" + department + "&";
     if (advisor) {
       url += `advisor=${advisor}`;
       if (company) {
@@ -114,7 +120,7 @@ function ViewAllPlacedStudents() {
     <div>
       <Navbar />
       <div style={{ maxHeight: "720px", marginTop: "100px" }}>
-        <h2>Placed Students In All Branches</h2>
+        <h2>Placed Students In {department}</h2>
         <div style={{ display: "flex" }}>
           <FormControl style={{ minWidth: 220, marginRight: "10px" }}>
             <InputLabel>Select Faculty Advisor</InputLabel>

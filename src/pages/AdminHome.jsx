@@ -65,6 +65,12 @@ const AdminHome = () => {
                     imageUrl={EditStudentImage}
                     action={() => navigate("/edit-faculties")}
                   />
+                  <OptionCard
+                    title="Create Viewer Account"
+                    description="Click here create a viewer account"
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/create-viewer-login")}
+                  />
                 </div>
               </>
             ) : (

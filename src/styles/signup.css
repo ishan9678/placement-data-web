@@ -42,3 +42,35 @@ body {
   text-align: center;
   margin-top: 16px;
 }
+
+/* date picker */
+
+.date-picker {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.date-picker:focus {
+  outline: none;
+  border-color: #337ab7;
+  box-shadow: 0 0 0 2px rgba(51, 122, 183, 0.2);
+}
+
+.date-picker:hover {
+  border-color: #337ab7;
+}
+
+.react-datepicker__input-container input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+}

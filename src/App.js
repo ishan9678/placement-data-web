@@ -38,6 +38,7 @@ const clientId =
 
 const App = () => {
   const [userRole, setUserRole] = useState(null);
+  const [tempAcc, setTempAcc] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const App = () => {
       .then((data) => {
         if (data.status === "success") {
           setUserRole(data.role);
+          setTempAcc(data.temp_acc);
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
@@ -80,6 +82,8 @@ const App = () => {
       return <AcademicAdvisorHome />;
     } else if (userRole === "Program Coordinator") {
       return <ProgramCoordinatorHome />;
+    } else if (tempAcc === "1") {
+      return <HodHome />;
     }
     return null;
   };
@@ -114,15 +118,16 @@ const App = () => {
             element={<ViewBranchPlacedStudents />}
           />
         )}
-        {isLoggedIn &&
+        {(isLoggedIn &&
           (userRole === "HOD" ||
             userRole === "Placement Coordinator" ||
-            userRole === "Academic Advisor") && (
+            userRole === "Academic Advisor")) ||
+          (tempAcc === "1" && (
             <Route
               path="/view-all-placed-student-details"
               element={<ViewAllPlacedStudents />}
             />
-          )}
+          ))}
         {isLoggedIn && userRole === "Placement Coordinator" && (
           <Route
             path="/add-placed-student-details"
@@ -159,15 +164,16 @@ const App = () => {
             element={<EditPlacedStudents />}
           />
         )}
-        {isLoggedIn &&
+        {(isLoggedIn &&
           (userRole === "HOD" ||
             userRole === "Placement Coordinator" ||
-            userRole === "Academic Advisor") && (
+            userRole === "Academic Advisor")) ||
+          (tempAcc === "1" && (
             <Route
               path="/consolidated-report"
               element={<ConsolidatedReport />}
             />
-          )}
+          ))}
         {<Route path="/reset-password" element={<ResetPassword />} />}
         {<Route path="/additional-details" element={<AdditionalDetails />} />}
         {/* Admin */}

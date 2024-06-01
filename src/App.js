@@ -31,6 +31,7 @@ import ViewHigherStudiesStudents from "./pages/ViewHigherStudiesStudents";
 import ViewEntrepreneurStudents from "./pages/ViewEntrepreneurStudents";
 import EditPlacedStudents from "./pages/EditPlacedStudents";
 import AcademicSearchPlacedStudents from "./pages/AcademicSearchPlacedStudents";
+import CreateViewerLogin from "./pages/CreateViewerLogin";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -181,6 +182,9 @@ const App = () => {
         )}
         {isLoggedIn && userRole === "Admin" && (
           <Route path="/edit-faculties" element={<EditFacultyDetails />} />
+        )}
+        {isLoggedIn && userRole === "Admin" && (
+          <Route path="/create-viewer-login" element={<CreateViewerLogin />} />
         )}
       </Routes>
     </Router>

@@ -65,6 +65,22 @@ const fields = [
     ],
   },
   {
+    label: "Department",
+    key: "department",
+    alternateMatches: [],
+    fieldType: {
+      type: "input",
+    },
+    example: "CINTEL",
+    validations: [
+      {
+        rule: "required",
+        errorMessage: "Department is required",
+        level: "error",
+      },
+    ],
+  },
+  {
     label: "Specialization",
     key: "specialization",
     alternateMatches: [],
@@ -157,16 +173,13 @@ function AddStudents() {
 
   const handleSubmit = async (validData) => {
     try {
-      const response = await fetch(
-        `${api_url}server/add_student_details.php`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(validData),
-        }
-      );
+      const response = await fetch(`${api_url}server/add_student_details.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(validData),
+      });
 
       const data = await response.json();
 

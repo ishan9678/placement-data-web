@@ -118,16 +118,16 @@ const App = () => {
             element={<ViewBranchPlacedStudents />}
           />
         )}
-        {(isLoggedIn &&
+        {isLoggedIn &&
           (userRole === "HOD" ||
             userRole === "Placement Coordinator" ||
-            userRole === "Academic Advisor")) ||
-          (tempAcc === "1" && (
+            userRole === "Academic Advisor" ||
+            tempAcc === "1") && (
             <Route
               path="/view-all-placed-student-details"
               element={<ViewAllPlacedStudents />}
             />
-          ))}
+          )}
         {isLoggedIn && userRole === "Placement Coordinator" && (
           <Route
             path="/add-placed-student-details"
@@ -164,16 +164,16 @@ const App = () => {
             element={<EditPlacedStudents />}
           />
         )}
-        {(isLoggedIn &&
+        {isLoggedIn &&
           (userRole === "HOD" ||
             userRole === "Placement Coordinator" ||
-            userRole === "Academic Advisor")) ||
-          (tempAcc === "1" && (
+            userRole === "Academic Advisor" ||
+            tempAcc === "1") && (
             <Route
               path="/consolidated-report"
               element={<ConsolidatedReport />}
             />
-          ))}
+          )}
         {<Route path="/reset-password" element={<ResetPassword />} />}
         {<Route path="/additional-details" element={<AdditionalDetails />} />}
         {/* Admin */}

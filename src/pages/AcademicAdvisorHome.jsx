@@ -36,10 +36,24 @@ const AcademicAdvisorHome = () => {
           <CardContent>
             {user !== null ? (
               <>
-                <Typography variant="h5" component="div" gutterBottom>
+                <Typography
+                  variant="h5"
+                  component="div"
+                  gutterBottom
+                  style={{ textAlign: "center" }}
+                >
                   {`Welcome, ${user}!`}
                 </Typography>
-                <div className="optionsContainer">
+                <div className="optionsContainer academic-options-container">
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    gutterBottom
+                    className="mobile-greeting"
+                    style={{ textAlign: "center" }}
+                  >
+                    {`Welcome, ${user}!`}
+                  </Typography>
                   <OptionCard
                     title="View Placed Student Details"
                     description="Click here to view details of placed students."

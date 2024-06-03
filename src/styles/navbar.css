@@ -1,6 +1,6 @@
 .navbar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   color: white;
@@ -11,6 +11,13 @@
   right: 0;
   width: 100%;
   z-index: 1000;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 ul {
@@ -33,11 +40,35 @@ button {
 }
 
 .logout {
-  margin-left: auto;
   padding: 5px 10px;
   color: red;
   background-color: white;
   border-radius: 20px;
   font-weight: 600;
-  margin-left: 20px;
+}
+
+.menu-icon {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    display: none;
+  }
+
+  ul.open {
+    display: flex;
+  }
+
+  li {
+    margin: 10px 0;
+  }
+
+  .menu-icon {
+    display: inline-block;
+    margin-left: auto;
+  }
 }

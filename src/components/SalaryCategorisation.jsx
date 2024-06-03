@@ -19,6 +19,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 function SalaryCategorisation({ apiUrl }) {
   const [salaryCategorisation, setSalaryCategorisation] = useState({});
@@ -63,12 +64,19 @@ function SalaryCategorisation({ apiUrl }) {
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "1rem",
+        marginBottom: "1rem",
+      }}
     >
       <h3>Salary Categorisation</h3>
       <TableContainer
+        className="salary-categorisation-table"
         component={Paper}
-        style={{ width: "50%", marginBottom: "20px" }}
+        style={{ marginBottom: "20px" }}
       >
         <Table size="small" aria-label="a dense table">
           <TableHead>
@@ -97,7 +105,7 @@ function SalaryCategorisation({ apiUrl }) {
       </TableContainer>
 
       {/* Graph*/}
-      <div style={{ width: "80%" }}>
+      <div className="salary-categorisation-graph">
         <h3>Salary Categorisation Bar Chart (in percentages)</h3>
         <ResponsiveContainer width="100%" height={500}>
           <BarChart

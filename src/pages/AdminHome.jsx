@@ -37,10 +37,24 @@ const AdminHome = () => {
           <CardContent>
             {user !== null ? (
               <>
-                <Typography variant="h5" component="div" gutterBottom>
+                <Typography
+                  variant="h5"
+                  component="div"
+                  gutterBottom
+                  style={{ textAlign: "center" }}
+                >
                   {`Welcome, ${user}!`}
                 </Typography>
-                <div className="optionsContainer">
+                <div className="optionsContainer admin-home-options-container">
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    gutterBottom
+                    className="mobile-greeting"
+                    style={{ textAlign: "center" }}
+                  >
+                    {`Welcome, ${user}!`}
+                  </Typography>
                   <OptionCard
                     title="Approve Users"
                     description="Click here to aprrove users"

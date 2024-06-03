@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 function ViewAllPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
@@ -119,10 +120,15 @@ function ViewAllPlacedStudents() {
   return (
     <div>
       <Navbar />
-      <div style={{ maxHeight: "720px", marginTop: "100px" }}>
-        <h2>Placed Students In {department}</h2>
+      <div className="view-all-placed-container" style={{ maxHeight: "500px" }}>
+        <h2 className="view-all-placed-title">
+          Placed Students In {department}
+        </h2>
         <div style={{ display: "flex" }}>
-          <FormControl style={{ minWidth: 220, marginRight: "10px" }}>
+          <FormControl
+            className="view-all-placed-select"
+            // style={{ minWidth: 220 }}
+          >
             <InputLabel>Select Faculty Advisor</InputLabel>
             <Select
               value={selectedAdvisor}
@@ -131,7 +137,7 @@ function ViewAllPlacedStudents() {
             >
               <MenuItem value="">
                 {" "}
-                <em>None</em>
+                <em style={{ color: "black" }}>None</em>
               </MenuItem>
               {facultyAdvisors.map((advisor) => (
                 <MenuItem
@@ -145,7 +151,7 @@ function ViewAllPlacedStudents() {
             </Select>
           </FormControl>
 
-          <FormControl style={{ minWidth: 220 }}>
+          <FormControl className="view-all-placed-select">
             <InputLabel>Select Company</InputLabel>
             <Select
               value={selectedCompany}
@@ -154,7 +160,7 @@ function ViewAllPlacedStudents() {
             >
               <MenuItem value="">
                 {" "}
-                <em>None</em>
+                <em style={{ color: "black" }}>None</em>
               </MenuItem>
               {companies.map((company) => (
                 <MenuItem
@@ -169,7 +175,11 @@ function ViewAllPlacedStudents() {
           </FormControl>
         </div>
 
-        <TableContainer component={Paper}>
+        <TableContainer
+          className="view-all-placed-table"
+          component={Paper}
+          style={{ overflowX: "auto" }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -201,7 +211,9 @@ function ViewAllPlacedStudents() {
                     <TableCell>
                       {student.file}
                       <div
-                        style={{ display: "inline-block", marginLeft: "10px" }}
+                        style={{
+                          marginLeft: "10px",
+                        }}
                       >
                         <Button
                           variant="contained"

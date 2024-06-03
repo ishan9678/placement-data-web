@@ -3,38 +3,82 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  overflow-y: auto;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.mainCard {
-  margin: 20px;
+.mobile-greeting {
+  display: none;
 }
 
 .optionsContainer {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .optionCard {
-  width: 45%;
+  margin: 20px;
+  flex: 1;
 }
 
 .cardImage {
+  margin-top: 20px;
   width: 100%;
-  height: 200px;
-  object-fit: cover;
-  margin-bottom: 10px;
+  height: auto;
 }
 
 .button {
-  margin-top: 20px;
+  justify-content: flex-end;
 }
 
-.toggleButton {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.hod-home-options-container {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .optionsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .placement-coordinator-options-container {
+    margin-top: 1100px;
+  }
+
+  .academic-options-container {
+    margin-top: 650px;
+  }
+
+  .fa-home-options-container {
+    margin-top: 1100px;
+  }
+
+  .hod-home-options-container {
+    width: 90%;
+    margin-top: 200px;
+  }
+
+  .pc-options-container {
+    margin-top: 200px;
+  }
+
+  .admin-home-options-container {
+    margin-top: 1450px;
+  }
+
+  .optionCard {
+    width: 90%;
+    margin: 20px 0;
+  }
+
+  .mobile-greeting {
+    display: block;
+  }
 }

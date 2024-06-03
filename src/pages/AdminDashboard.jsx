@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 function UnapprovedUsersTable() {
   const [unapprovedUsers, setUnapprovedUsers] = useState([]);
@@ -58,6 +59,7 @@ function UnapprovedUsersTable() {
       <Navbar />
       <h1 style={{ textAlign: "center" }}>Approve Users</h1>
       <TableContainer
+        className="admin-dashboard-container"
         component={Paper}
         style={{ maxHeight: "500px", overflowY: "auto" }}
       >

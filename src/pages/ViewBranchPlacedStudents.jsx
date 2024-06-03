@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 function ViewBranchPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
@@ -78,7 +79,7 @@ function ViewBranchPlacedStudents() {
   return (
     <div>
       <Navbar />
-      <div style={{ maxHeight: "720px", marginTop: "200px" }}>
+      <div className="view-all-placed-container" style={{ maxHeight: "720px" }}>
         <h2>Placed Students In {branch}</h2>
         <FormControl style={{ minWidth: 220 }}>
           <InputLabel>Select Faculty Advisor</InputLabel>

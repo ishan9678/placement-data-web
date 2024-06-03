@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography, Button } from "@mui/material";
-import PlacedStudentImage from "../assets/placed.svg";
 import EditStudentImage from "../assets/student_details.svg";
 import { ClipLoader } from "react-spinners";
 import api_url from "../apiconfig";
@@ -31,15 +30,30 @@ const PlacementCoordinatorHome = () => {
   return (
     <div>
       <Navbar />
-      <div className="container">
+      <div className="container ">
         <Card className="mainCard">
           <CardContent>
             {user !== null ? (
               <>
-                <Typography variant="h5" component="div" gutterBottom>
+                <Typography
+                  variant="h5"
+                  component="div"
+                  gutterBottom
+                  style={{ textAlign: "center" }}
+                >
                   {`Welcome, ${user}!`}
                 </Typography>
-                <div className="optionsContainer">
+                <div className="optionsContainer placement-coordinator-options-container">
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    gutterBottom
+                    className="mobile-greeting"
+                    style={{ textAlign: "center" }}
+                  >
+                    {`Welcome, ${user}!`}
+                  </Typography>
+
                   <OptionCard
                     title="Add Placed Student Details"
                     description="Click here to add details of newly placed students."
@@ -87,13 +101,12 @@ const OptionCard = ({ title, description, imageUrl, action }) => {
         <Typography variant="h6" component="div" gutterBottom>
           {title}
         </Typography>
-        <img
-          src={imageUrl}
-          alt={title}
-          className="cardImage"
-          style={{ marginTop: "20px" }}
-        />
-        <Typography variant="body2" color="text.secondary">
+        <img src={imageUrl} alt={title} className="cardImage" />
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          style={{ margin: "1rem 0" }}
+        >
           {description}
         </Typography>
         <Button
@@ -101,7 +114,6 @@ const OptionCard = ({ title, description, imageUrl, action }) => {
           variant="contained"
           color="primary"
           className="button"
-          style={{ marginTop: "20px" }}
         >
           Go
         </Button>

@@ -4,6 +4,7 @@ import { TextField, Button, Modal, Box } from "@mui/material";
 import srm_logo from "../assets/srm_logo.png";
 import api_url from "../apiconfig";
 import { GoogleLogin } from "react-google-login";
+import "../styles/login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -146,7 +147,7 @@ const Login = () => {
       >
         <img src={srm_logo} alt="logo" className="logo" />
       </div>
-      <form onSubmit={handleLogin} className="form-container">
+      <form onSubmit={handleLogin} className="form-container login-form">
         <h2 className="form-heading">Login</h2>
         <TextField
           label="Employee ID"

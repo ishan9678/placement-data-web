@@ -74,3 +74,11 @@ body {
   font-family: inherit;
   width: 100%;
 }
+
+/* responsive */
+
+@media screen and (max-width: 768px) {
+  .signup-container {
+    width: 380px;
+  }
+}

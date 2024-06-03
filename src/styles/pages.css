@@ -1,0 +1,154 @@
+/* add placed students */
+
+@media screen and (max-width: 768px) {
+  .buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* view all placed students */
+
+div.view-all-placed-container .view-all-placed-select {
+  min-width: 220px;
+}
+
+@media screen and (max-width: 768px) {
+  .view-all-placed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+  }
+
+  div.view-all-placed-container .view-all-placed-select {
+    min-width: 200px;
+    margin-top: 2rem;
+  }
+}
+
+/* edit placed students */
+
+.edit-placed-container {
+  min-width: 60rem;
+}
+
+.edit-placed-data-grid-container {
+  height: 400px;
+  max-width: 85rem;
+}
+
+@media screen and (max-width: 768px) {
+  .edit-placed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .edit-placed-title {
+    font-size: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .edit-placed-data-grid-container {
+    max-width: 380px;
+  }
+}
+
+/* consolidated report */
+
+.consolidated-report-container {
+  margin-top: 200px;
+}
+
+.salary-categorisation-table {
+  width: 50% !important;
+}
+
+.salary-categorisation-graph {
+  width: 80%;
+}
+
+.offer-summary-table {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.offer-summary-graph {
+  width: 80%;
+}
+
+.student-statistics-container {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+.salary-statistics-table {
+  width: 80%;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  .consolidated-report-container {
+    max-width: 400px;
+    margin-top: 50px;
+  }
+  .consolidated-report-title {
+    font-size: 20px;
+    margin-bottom: 2rem;
+  }
+
+  .salary-categorisation-table {
+    width: 90% !important;
+  }
+
+  .salary-categorisation-graph {
+    width: 90%;
+  }
+
+  .offer-summary-table {
+    width: 90%;
+  }
+
+  .offer-summary-graph {
+    width: 95%;
+  }
+
+  .student-statistics-container {
+    width: 90%;
+  }
+
+  .salary-statistics-table {
+    width: 90%;
+  }
+}
+
+/* view placed students fa */
+
+@media screen and (max-width: 768px) {
+  .fa-students-table {
+    width: 400px !important;
+  }
+}
+
+/* admin */
+
+@media screen and (max-width: 768px) {
+  .admin-dashboard-container {
+    width: 400px !important;
+  }
+}
+
+/* viewer acc */
+
+@media screen and (max-width: 768px) {
+  .create-viewer-container {
+    width: 380px !important;
+  }
+}

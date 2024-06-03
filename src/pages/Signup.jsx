@@ -117,7 +117,7 @@ const Signup = () => {
 
   return (
     <>
-      <div>
+      <div className="signup-container">
         {/* <div className="logo">
           <img src={srm_logo} alt="logo" />
         </div> */}

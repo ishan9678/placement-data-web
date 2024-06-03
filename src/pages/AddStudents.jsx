@@ -202,8 +202,17 @@ function AddStudents() {
       <Typography variant="h4" align="center" gutterBottom>
         Add Students
       </Typography>
-      <Box display="flex" justifyContent="center" marginBottom={2}>
-        <Button variant="contained" color="primary" style={{ marginRight: 16 }}>
+      <Box
+        className="buttons-container"
+        display="flex"
+        justifyContent="center"
+        marginBottom={2}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginRight: 16, marginTop: "1rem" }}
+        >
           <a href={ExcelTemplate} download="ExcelTemplate.csv">
             {" "}
             Download Excel Template
@@ -213,6 +222,7 @@ function AddStudents() {
           variant="contained"
           color="primary"
           onClick={() => setIsOpen(true)}
+          style={{ marginTop: "1rem" }}
         >
           Upload Excel Sheet
         </Button>

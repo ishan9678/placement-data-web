@@ -31,6 +31,7 @@ import SalaryStatistics from "../components/SalaryStatistics";
 import Navbar from "../components/Navbar";
 import { useReactToPrint } from "react-to-print";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 function BranchConsolidatedReport() {
   const [specialization, setSpecialization] = useState(null);
@@ -38,6 +39,7 @@ function BranchConsolidatedReport() {
   const [batch, setBatch] = useState(null);
   const [consolidatedReport, setConsolidatedReport] = useState([]);
   const [shouldRender, setShouldRender] = useState(true);
+  const [xAxisAngle, setXAxisAngle] = useState(0); // Default angle
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
     marquee: 0,
@@ -93,6 +95,24 @@ function BranchConsolidatedReport() {
       })
       .catch((error) => console.error("Fetch error:", error));
   }, [batch]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        // Change angle for small screens
+        setXAxisAngle(-45);
+      } else {
+        setXAxisAngle(0); // Reset angle for larger screens
+      }
+    };
+
+    // Call handleResize initially and add event listener
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    // Clean up event listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const calculateTotal = (data) => {
     let newTotal = {
@@ -151,8 +171,9 @@ function BranchConsolidatedReport() {
     <div>
       <Navbar />
       <div
+        className="consolidated-report-container"
         ref={componentRef}
-        style={{ maxHeight: "720px", marginTop: "200px" }}
+        style={{ maxHeight: "720px" }}
       >
         <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
           Consolidated Report for {specialization}
@@ -349,7 +370,7 @@ function BranchConsolidatedReport() {
         )}
 
         {/*Offer Summary*/}
-        <div style={{ maxWidth: "50%", margin: "0 auto" }}>
+        <div className="offer-summary-table">
           <h3>Offer Summary</h3>
           <TableContainer component={Paper}>
             <Table size="small">
@@ -410,7 +431,7 @@ function BranchConsolidatedReport() {
         </div>
 
         {/* Offers under various categories Graph*/}
-        <div style={{ maxWidth: "80%", margin: "0 auto" }}>
+        <div className="offer-summary-graph">
           <h3>Offers under various Categories</h3>
           <ResponsiveContainer width="100%" height={500}>
             <BarChart
@@ -420,8 +441,8 @@ function BranchConsolidatedReport() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="category"
-                angle={0}
-                textAnchor="middle"
+                angle={xAxisAngle}
+                textAnchor="end"
                 interval={0}
               />
               <YAxis

@@ -40,7 +40,16 @@ const FaHome = () => {
                 <Typography variant="h5" component="div" gutterBottom>
                   {`Welcome, ${user}!`}
                 </Typography>
-                <div className="optionsContainer">
+                <div className="optionsContainer fa-home-options-container">
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    gutterBottom
+                    className="mobile-greeting"
+                    style={{ textAlign: "center" }}
+                  >
+                    {`Welcome, ${user}!`}
+                  </Typography>
                   <OptionCard
                     title="Placed Student Details"
                     description="Click here to view details of placed students."

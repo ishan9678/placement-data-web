@@ -9,6 +9,7 @@ import {
   Paper,
 } from "@mui/material";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 function SalaryStatistics({ apiUrl }) {
   const [statistics, setStatistics] = useState({});
@@ -26,7 +27,7 @@ function SalaryStatistics({ apiUrl }) {
   }, []);
 
   return (
-    <div style={{ maxWidth: "80%", margin: "0 auto" }}>
+    <div className="salary-statistics-table">
       <h3>Salary Statistics</h3>
       <TableContainer component={Paper}>
         <Table size="small" aria-label="salary statistics table">

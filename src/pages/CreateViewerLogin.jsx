@@ -13,6 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../styles/signup.css";
 import api_url from "../apiconfig";
 import Navbar from "../components/Navbar";
+import "../styles/pages.css";
 
 const CreateViewerLogin = () => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const CreateViewerLogin = () => {
   return (
     <>
       <Navbar />
-      <div>
+      <div className="create-viewer-container">
         <form
           onSubmit={handleSignup}
           className="form-container"

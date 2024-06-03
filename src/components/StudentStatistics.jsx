@@ -8,6 +8,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import "../styles/pages.css";
 
 function StudentStatistics({ apiUrl }) {
   const [statistics, setStatistics] = useState({});
@@ -25,7 +26,7 @@ function StudentStatistics({ apiUrl }) {
   }, [apiUrl]);
 
   return (
-    <div style={{ maxWidth: "80%", margin: "0 auto" }}>
+    <div className="student-statistics-container">
       <h3>Student Statistics</h3>
       <TableContainer component={Paper}>
         <Table size="small" aria-label="student statistics table">

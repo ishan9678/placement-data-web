@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 const useStyles = makeStyles({
   option: {
@@ -303,10 +304,10 @@ function EditPlacedStudents() {
   return (
     <div>
       <Navbar />
-      <h1 style={{ textAlign: "center" }}>
-        Edit Placed Student Details in {department}
-      </h1>
-      <div style={{ minWidth: "60rem" }}>
+      <div className="edit-placed-container">
+        <h1 className="edit-placed-title" style={{ textAlign: "center" }}>
+          Edit Placed Student Details in {department}
+        </h1>
         <TextField
           fullWidth
           label="Search by Register Number"
@@ -316,7 +317,7 @@ function EditPlacedStudents() {
         />
       </div>
       {studentData.map((student) => (
-        <div key={student.id} style={{ height: 400, maxWidth: "85rem" }}>
+        <div className="edit-placed-data-grid-container" key={student.id}>
           <DataGrid
             rows={studentData}
             key={JSON.stringify(studentData)}

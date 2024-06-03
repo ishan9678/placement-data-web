@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api_url from "../apiconfig";
 import BackButton from "./BackButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import "../styles/navbar.css";
 
 const Navbar = () => {
   const [userRole, setUserRole] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +47,7 @@ const Navbar = () => {
 
   const handleMenuClick = (path) => {
     navigate(path);
+    setMenuOpen(false);
   };
 
   const renderMenuItems = () => {
@@ -166,20 +170,29 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar" style={{ backgroundColor: "#1565c0" }}>
-      <ul>
-        <li className="left-end">
+    <nav className="navbar">
+      <div className="navbar-container">
+        <div className="navbar-left">
           <BackButton />
-        </li>
-        {renderMenuItems()}
-        <li
-          className="logout right-end"
-          onClick={handleLogout}
-          style={{ cursor: "pointer" }}
-        >
-          Logout
-        </li>
-      </ul>
+        </div>
+        <div className={`navbar-menu ${menuOpen ? "open" : ""}`}>
+          <ul className={`menu-items ${menuOpen ? "open" : ""}`}>
+            {renderMenuItems()}
+            <li
+              className="logout"
+              onClick={handleLogout}
+              style={{ cursor: "pointer" }}
+            >
+              Logout
+            </li>
+          </ul>
+        </div>
+        <div className="navbar-right" style={{ marginRight: "2rem" }}>
+          <button className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <CloseIcon /> : <MenuIcon />}
+          </button>
+        </div>
+      </div>
     </nav>
   );
 };

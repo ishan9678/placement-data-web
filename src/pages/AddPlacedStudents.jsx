@@ -13,6 +13,7 @@ import {
 import ExcelTemplate from "../excel-templates/placed-students.xlsx";
 import api_url from "../apiconfig";
 import Navbar from "../components/Navbar";
+import "../styles/pages.css";
 
 const fields = [
   {
@@ -237,8 +238,17 @@ function AddPlacedStudents() {
       <Typography variant="h4" align="center" gutterBottom>
         Add Placed Students
       </Typography>
-      <Box display="flex" justifyContent="center" marginBottom={2}>
-        <Button variant="contained" color="primary" style={{ marginRight: 16 }}>
+      <Box
+        display="flex"
+        justifyContent="center"
+        marginBottom={2}
+        className="buttons-container"
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginRight: 16, marginTop: "1rem" }}
+        >
           <a href={ExcelTemplate} download="ExcelTemplate.csv">
             {" "}
             Download Excel Template
@@ -248,6 +258,7 @@ function AddPlacedStudents() {
           variant="contained"
           color="primary"
           onClick={() => setIsOpen(true)}
+          style={{ marginTop: "1rem" }}
         >
           Upload Excel Sheet
         </Button>

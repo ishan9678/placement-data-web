@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
+import "../styles/pages.css";
 
 function ViewPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
@@ -124,11 +125,11 @@ function ViewPlacedStudents() {
   };
 
   return (
-    <div style={{ maxHeight: "720px", marginTop: "200px" }}>
+    <div style={{ maxHeight: "720px" }}>
       <Navbar />
       <div>
         <h2 style={{ textAlign: "center" }}>Placed Students Details</h2>
-        <TableContainer component={Paper}>
+        <TableContainer className="fa-students-table" component={Paper}>
           <Table>
             <TableHead>
               <TableRow>

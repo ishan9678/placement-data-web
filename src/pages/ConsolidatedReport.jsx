@@ -32,6 +32,7 @@ import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import { useReactToPrint } from "react-to-print";
 import "../styles/pages.css";
+import CompanyStatistics from "../components/CompanyStatistics";
 
 function ConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
@@ -635,6 +636,10 @@ function ConsolidatedReport() {
               apiUrl={`${api_url}server/get_salary_statistics.php?batch=${batch}&department=${department}`}
             />
           )}
+          {/*Company Statistics */}
+          <CompanyStatistics
+            apiUrl={`${api_url}server/get_company_statistics.php?batch=${batch}&department=${department}`}
+          />
         </div>
         <Button
           className="print-button"

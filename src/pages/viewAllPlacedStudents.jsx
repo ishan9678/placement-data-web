@@ -24,6 +24,7 @@ function ViewAllPlacedStudents() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [companies, setCompanies] = useState([]);
   const [role, setRole] = useState();
+  const [isTempAcc, setIsTempAcc] = useState(0);
   const [department, setDepartment] = useState("");
 
   useEffect(() => {
@@ -35,6 +36,7 @@ function ViewAllPlacedStudents() {
       .then((data) => {
         if (data.status === "success") {
           setRole(data.role);
+          setIsTempAcc(data.isTempAcc);
           setDepartment(data.department);
         } else {
           console.error("Error:", data.message);
@@ -191,7 +193,7 @@ function ViewAllPlacedStudents() {
                 <TableCell>Package</TableCell>
                 <TableCell>Faculty Advisor</TableCell>
                 <TableCell>Batch</TableCell>
-                {role === "Placement Coordinator" && (
+                {(role === "Placement Coordinator" || isTempAcc === 1) && (
                   <TableCell>File</TableCell>
                 )}
               </TableRow>
@@ -207,7 +209,8 @@ function ViewAllPlacedStudents() {
                   <TableCell>{student.package} LPA</TableCell>
                   <TableCell>{student.facultyAdvisor}</TableCell>
                   <TableCell>{student.batch}</TableCell>
-                  {role === "Placement Coordinator" && student.file ? (
+                  {(role === "Placement Coordinator" || isTempAcc === 1) &&
+                  student.file ? (
                     <TableCell>
                       {student.file}
                       <div

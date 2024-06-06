@@ -89,9 +89,11 @@ div.view-all-placed-container .view-all-placed-select {
   margin-bottom: 3rem;
 }
 
-.salary-statistics-table {
+.salary-statistics-table,
+.company-statistics-table {
   width: 80%;
   margin: 0 auto;
+  margin-top: 2.5rem;
 }
 
 @media screen and (max-width: 768px) {
@@ -124,7 +126,8 @@ div.view-all-placed-container .view-all-placed-select {
     width: 90%;
   }
 
-  .salary-statistics-table {
+  .salary-statistics-table,
+  .company-statistics-table {
     width: 90%;
   }
 }

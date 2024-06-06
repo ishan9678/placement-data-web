@@ -28,6 +28,7 @@ import SalaryCategorisation from "../components/SalaryCategorisation";
 import MarqueeStudents from "../components/MarqueeStudents";
 import StudentStatistics from "../components/StudentStatistics";
 import SalaryStatistics from "../components/SalaryStatistics";
+import CompanyStatistics from "../components/CompanyStatistics";
 import Navbar from "../components/Navbar";
 import { useReactToPrint } from "react-to-print";
 import api_url from "../apiconfig";

@@ -28,6 +28,7 @@ import SalaryCategorisation from "../components/SalaryCategorisation";
 import MarqueeStudents from "../components/MarqueeStudents";
 import StudentStatistics from "../components/StudentStatistics";
 import SalaryStatistics from "../components/SalaryStatistics";
+import CompanyStatistics from "../components/CompanyStatistics";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import { useNavigate } from "react-router-dom";
@@ -630,6 +631,11 @@ function AcademicAdvisorConsolidatedReport() {
           {shouldRender && (
             <SalaryStatistics
               apiUrl={`${api_url}server/get_salary_statistics.php?batch=${batch}&department=${department}`}
+            />
+          )}
+          {shouldRender && (
+            <CompanyStatistics
+              apiUrl={`${api_url}server/get_company_statistics.php?batch=${batch}&department=${department}`}
             />
           )}
         </div>

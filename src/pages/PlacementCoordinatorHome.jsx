@@ -67,6 +67,22 @@ const PlacementCoordinatorHome = () => {
                     action={() => navigate("/view-all-placed-student-details")}
                   />
                   <OptionCard
+                    title="View Higher Studies Students"
+                    description="Click here to view details of higher studies students"
+                    imageUrl={EditStudentImage}
+                    action={() =>
+                      navigate("/view-all-higher-studies-student-details")
+                    }
+                  />
+                  <OptionCard
+                    title="View Entrepreneur Students"
+                    description="Click here to view details of Entrepreneur students"
+                    imageUrl={EditStudentImage}
+                    action={() =>
+                      navigate("/view-all-entrepreneur-student-details")
+                    }
+                  />
+                  <OptionCard
                     title="Edit Placed Student Details"
                     description="Click here to edit details of placed students."
                     imageUrl={EditStudentImage}

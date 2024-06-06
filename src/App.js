@@ -32,6 +32,8 @@ import ViewEntrepreneurStudents from "./pages/ViewEntrepreneurStudents";
 import EditPlacedStudents from "./pages/EditPlacedStudents";
 import AcademicSearchPlacedStudents from "./pages/AcademicSearchPlacedStudents";
 import CreateViewerLogin from "./pages/CreateViewerLogin";
+import ViewAllHigherStudiesStudents from "./pages/VIewAllHigherStudiesStudents";
+import ViewAllEntrepreneurStudents from "./pages/ViewAllEntrepreneurStudents";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -132,6 +134,18 @@ const App = () => {
           <Route
             path="/add-placed-student-details"
             element={<AddPlacedStudents />}
+          />
+        )}
+        {isLoggedIn && userRole === "Placement Coordinator" && (
+          <Route
+            path="/view-all-higher-studies-student-details"
+            element={<ViewAllHigherStudiesStudents />}
+          />
+        )}
+        {isLoggedIn && userRole === "Placement Coordinator" && (
+          <Route
+            path="/view-all-entrepreneur-student-details"
+            element={<ViewAllEntrepreneurStudents />}
           />
         )}
         {isLoggedIn && userRole === "Academic Advisor" && (

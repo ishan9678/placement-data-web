@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
 import {
   BarChart,
@@ -20,6 +21,7 @@ import {
 } from "recharts";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
+import * as XLSX from "xlsx";
 
 function SalaryCategorisation({ apiUrl }) {
   const [salaryCategorisation, setSalaryCategorisation] = useState({});
@@ -62,6 +64,28 @@ function SalaryCategorisation({ apiUrl }) {
     "#f79646",
   ];
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "DataSheet.xlsx");
+  };
+
+  const extractTableData = () => {
+    const data = Object.entries(salaryCategorisation).map(([key, value]) => ({
+      Salary: key,
+      Count: value,
+    }));
+
+    // Adding the totals row
+    data.push({
+      Salary: "Total",
+      Count: getTotalCount(),
+    });
+
+    return data;
+  };
+
   return (
     <div
       style={{
@@ -78,6 +102,14 @@ function SalaryCategorisation({ apiUrl }) {
         component={Paper}
         style={{ marginBottom: "20px" }}
       >
+        <Button
+          variant="contained"
+          size="small"
+          onClick={() => downloadExcel(extractTableData())}
+          style={{ backgroundColor: "#10793F" }}
+        >
+          Download As Excel
+        </Button>
         <Table size="small" aria-label="a dense table">
           <TableHead>
             <TableRow sx={{ backgroundColor: "#00afef", color: "white" }}>

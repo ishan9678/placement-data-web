@@ -33,6 +33,7 @@ import api_url from "../apiconfig";
 import { useReactToPrint } from "react-to-print";
 import "../styles/pages.css";
 import CompanyStatistics from "../components/CompanyStatistics";
+import * as XLSX from "xlsx";
 
 function ConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
@@ -237,6 +238,135 @@ function ConsolidatedReport() {
     setBatch(event.target.value);
   };
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "DataSheet.xlsx");
+  };
+
+  const extractDepartmentTableData = () => {
+    // Extracting each department's data
+    const data = Object.entries(departmentStatistics).map(
+      ([department, stats]) => ({
+        Department: department,
+        "Total Count": stats.totalCount,
+        "Superset Enrolled": stats.supersetEnrolledCount,
+        Marquee: stats.marquee,
+        "Super Dream": stats.superDream,
+        Dream: stats.dream,
+        "Day Sharing": stats.daySharing,
+        Internship: stats.internship,
+        "Total Offers": stats.totalOffers,
+        "Percentage %":
+          ((stats.totalOffers / stats.supersetEnrolledCount) * 100).toFixed(2) +
+          "%",
+        "Unique Offers": stats.uniqueCount,
+      })
+    );
+
+    // Adding the totals row
+    data.push({
+      Department: "Total",
+      "Total Count": departmentStatisticsTotal.totalCount,
+      "Superset Enrolled": departmentStatisticsTotal.supersetEnrolledCount,
+      Marquee: departmentStatisticsTotal.marquee,
+      "Super Dream": departmentStatisticsTotal.superDream,
+      Dream: departmentStatisticsTotal.dream,
+      "Day Sharing": departmentStatisticsTotal.daySharing,
+      Internship: departmentStatisticsTotal.internship,
+      "Total Offers": departmentStatisticsTotal.totalOffers,
+      "Percentage %":
+        (
+          (departmentStatisticsTotal.totalOffers /
+            departmentStatisticsTotal.supersetEnrolledCount) *
+          100
+        ).toFixed(2) + "%",
+      "Unique Offers": departmentStatisticsTotal.uniqueCount,
+    });
+
+    return data;
+  };
+
+  const extractConsolidatedTable1Data = () => {
+    const data = consolidatedReport.map((advisor) => ({
+      "Name of Faculty Advisor": advisor.facultyAdvisorName,
+      Section: advisor.facultyAdvisorSection,
+      "Superset Enrolled": advisor.supersetEnrolledCount,
+      Marquee: advisor.marquee,
+      "Super Dream": advisor.superDream,
+      Dream: advisor.dream,
+      "Day Sharing": advisor.daySharing,
+      "Internship Offers": advisor.internship,
+      "Total Offers": advisor.totalOffers,
+      "Unique Offers": advisor.uniqueCount,
+    }));
+
+    // Adding total row
+    data.push({
+      "Name of Faculty Advisor": "Total",
+      Section: "",
+      "Superset Enrolled": total.supersetEnrolledCount,
+      Marquee: total.marquee,
+      "Super Dream": total.superDream,
+      Dream: total.dream,
+      "Day Sharing": total.daySharing,
+      "Internship Offers": total.internship,
+      "Total Offers": total.totalOffers,
+      "Unique Offers": total.uniqueCount,
+    });
+
+    return data;
+  };
+
+  const extractConsolidatedTable2Data = () => {
+    const data = consolidatedReport.map((advisor) => ({
+      "Name of Faculty Advisor": advisor.facultyAdvisorName,
+      Section: advisor.facultyAdvisorSection,
+      "Class Strength": advisor.totalCount,
+      "Placement Enrolled": advisor.supersetEnrolledCount,
+      "Placed Students": advisor.uniqueCount,
+      "Placement %":
+        ((advisor.uniqueCount / advisor.supersetEnrolledCount) * 100).toFixed(
+          2
+        ) + "%",
+      "Not Placed Students":
+        advisor.supersetEnrolledCount - advisor.uniqueCount,
+    }));
+
+    // Adding the totals row
+    data.push({
+      "Name of Faculty Advisor": "Total",
+      Section: "",
+      "Class Strength": total.totalCount,
+      "Placement Enrolled": total.supersetEnrolledCount,
+      "Placed Students": total.uniqueCount,
+      "Placement %":
+        ((total.uniqueCount / total.supersetEnrolledCount) * 100).toFixed(2) +
+        "%",
+      "Not Placed Students": total.notPlaced,
+    });
+
+    return data;
+  };
+
+  const extractOfferSummaryTableData = () => {
+    const data = [
+      { "S. NO": 1, CATEGORY: "Marquee", "NO OF OFFERS": total.marquee },
+      { "S. NO": 2, CATEGORY: "Super Dream", "NO OF OFFERS": total.superDream },
+      { "S. NO": 3, CATEGORY: "Dream", "NO OF OFFERS": total.dream },
+      { "S. NO": 4, CATEGORY: "Day Sharing", "NO OF OFFERS": total.daySharing },
+      { "S. NO": 5, CATEGORY: "Internship", "NO OF OFFERS": total.internship },
+      {
+        "S. NO": "Total",
+        CATEGORY: "",
+        "NO OF OFFERS": total.totalOffers,
+      },
+    ];
+
+    return data;
+  };
+
   return (
     <div>
       <Navbar />
@@ -278,6 +408,14 @@ function ConsolidatedReport() {
             </FormControl>
           </div>
           {/* table 1 */}
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => downloadExcel(extractConsolidatedTable1Data())}
+            style={{ backgroundColor: "#10793F" }}
+          >
+            Download As Excel
+          </Button>
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
               <TableHead>
@@ -352,6 +490,14 @@ function ConsolidatedReport() {
           <br />
           {/* Table 2 */}
           <TableContainer component={Paper}>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => downloadExcel(extractConsolidatedTable2Data())}
+              style={{ backgroundColor: "#10793F" }}
+            >
+              Download As Excel
+            </Button>
             <Table size="small" aria-label="a dense table">
               <TableHead>
                 <TableRow
@@ -422,7 +568,16 @@ function ConsolidatedReport() {
           </TableContainer>
 
           {/*Department Statistics*/}
+
           <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => downloadExcel(extractDepartmentTableData())}
+              style={{ backgroundColor: "#10793F" }}
+            >
+              Download As Excel
+            </Button>
             <Table size="small" aria-label="branch-statistics">
               <TableHead>
                 <TableRow
@@ -532,6 +687,14 @@ function ConsolidatedReport() {
           <div className="offer-summary-table">
             <h3>Offer Summary</h3>
             <TableContainer component={Paper}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => downloadExcel(extractOfferSummaryTableData())}
+                style={{ backgroundColor: "#10793F" }}
+              >
+                Download As Excel
+              </Button>
               <Table size="small">
                 <TableHead>
                   <TableRow

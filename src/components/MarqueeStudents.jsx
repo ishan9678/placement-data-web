@@ -7,7 +7,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
+import * as XLSX from "xlsx";
 
 function MarqueeStudents({ apiUrl }) {
   const [marqueeStudents, setMarqueeStudents] = useState([]);
@@ -28,10 +30,37 @@ function MarqueeStudents({ apiUrl }) {
       .catch((error) => console.error("Fetch error:", error));
   }, [apiUrl]);
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "DataSheet.xlsx");
+  };
+
+  const extractTableData = () => {
+    const data = marqueeStudents.map((student, index) => ({
+      "S.No": index + 1,
+      "Register No": student.registerNumber,
+      "Student Name": student.fullName,
+      Company: student.companyName,
+      Package: `${student.package} LPA`,
+    }));
+
+    return data;
+  };
+
   return (
     <div>
       <h3>Marquee Students</h3>
       <TableContainer component={Paper}>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={() => downloadExcel(extractTableData())}
+          style={{ backgroundColor: "#10793F" }}
+        >
+          Download As Excel
+        </Button>
         <Table>
           <TableHead>
             <TableRow

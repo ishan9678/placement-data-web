@@ -7,8 +7,10 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
 import "../styles/pages.css";
+import * as XLSX from "xlsx";
 
 function CompanyStatistics({ apiUrl }) {
   const [statistics, setStatistics] = useState({});
@@ -40,10 +42,63 @@ function CompanyStatistics({ apiUrl }) {
 
   const specializations = Object.keys(totalRow);
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "DataSheet.xlsx");
+  };
+
+  const extractTableData = () => {
+    const data = [];
+
+    // Extract individual company data
+    Object.entries(statistics).forEach(([companyName, companyData]) => {
+      const rowData = {
+        "Company Name": companyName,
+        Category: companyData.category,
+        ...companyData.specializations,
+        Total: Object.values(companyData.specializations).reduce(
+          (sum, count) => sum + parseInt(count, 10),
+          0
+        ),
+      };
+
+      // Ensure all specializations are included
+      specializations.forEach((spec) => {
+        if (!rowData[spec]) {
+          rowData[spec] = 0;
+        }
+      });
+
+      data.push(rowData);
+    });
+
+    // Extract total row data
+    const totalRowData = {
+      "Company Name": "Total",
+      Category: "",
+      ...totalRow,
+      Total: Object.values(totalRow).reduce((sum, count) => sum + count, 0),
+    };
+
+    data.push(totalRowData);
+
+    return data;
+  };
+
   return (
     <div className="company-statistics-table">
       <h3>Company Statistics</h3>
       <TableContainer component={Paper}>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={() => downloadExcel(extractTableData())}
+          style={{ backgroundColor: "#10793F" }}
+        >
+          Download As Excel{" "}
+        </Button>
         <Table size="small" aria-label="company statistics table">
           <TableHead>
             <TableRow

@@ -34,6 +34,8 @@ import AcademicSearchPlacedStudents from "./pages/AcademicSearchPlacedStudents";
 import CreateViewerLogin from "./pages/CreateViewerLogin";
 import ViewAllHigherStudiesStudents from "./pages/VIewAllHigherStudiesStudents";
 import ViewAllEntrepreneurStudents from "./pages/ViewAllEntrepreneurStudents";
+import SCOHome from "./pages/SCOHome";
+import SCOConsolidatedReport from "./pages/SCOConsolidatedReport";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -86,6 +88,8 @@ const App = () => {
       return <ProgramCoordinatorHome />;
     } else if (tempAcc === "1") {
       return <HodHome />;
+    } else if (userRole === "SCO Placement Coordinator") {
+      return <SCOHome />;
     }
     return null;
   };
@@ -205,6 +209,12 @@ const App = () => {
         )}
         {isLoggedIn && userRole === "Admin" && (
           <Route path="/create-viewer-login" element={<CreateViewerLogin />} />
+        )}
+        {isLoggedIn && userRole === "SCO Placement Coordinator" && (
+          <Route
+            path="/sco-consolidated-report"
+            element={<SCOConsolidatedReport />}
+          />
         )}
       </Routes>
     </Router>

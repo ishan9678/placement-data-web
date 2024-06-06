@@ -65,6 +65,7 @@ const Signup = () => {
       "M.Tech (Integrated) - Cyber Security and Digital  Forensics",
       "NA",
     ],
+    NA: ["NA"],
   };
 
   const handleSignup = async (event) => {
@@ -185,6 +186,12 @@ const Signup = () => {
               <MenuItem value="Program Coordinator" style={{ color: "black" }}>
                 Program Coordinator
               </MenuItem>
+              <MenuItem
+                value="SCO Placement Coordinator"
+                style={{ color: "black" }}
+              >
+                SCO Placement Coordinator
+              </MenuItem>
             </Select>
           </FormControl>
 
@@ -209,6 +216,9 @@ const Signup = () => {
               </MenuItem>
               <MenuItem value="NWC" style={{ color: "black" }}>
                 NWC
+              </MenuItem>
+              <MenuItem value="NA" style={{ color: "black" }}>
+                NA
               </MenuItem>
             </Select>
           </FormControl>

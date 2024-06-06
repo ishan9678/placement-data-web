@@ -234,6 +234,14 @@ function ViewAllPlacedStudents() {
                   )}
                 </TableRow>
               ))}
+              <TableRow>
+                <TableCell colSpan={7}>
+                  <strong>Total</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>{placedStudents.length} students</strong>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>

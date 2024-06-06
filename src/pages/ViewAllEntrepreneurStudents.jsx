@@ -178,6 +178,14 @@ function ViewAllEntrepreneurStudents() {
                   )}
                 </TableRow>
               ))}
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <strong>Total</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>{entrepreneurStudents.length} students</strong>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>

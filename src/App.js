@@ -192,6 +192,12 @@ const App = () => {
               element={<ConsolidatedReport />}
             />
           )}
+        {/* {isLoggedIn && userRole === "Placement Coordinator" && (
+          <Route
+            path="/consolidated-report-comparison"
+            element={<ConsolidatedReportComparision />}
+          />
+        )} */}
         {<Route path="/reset-password" element={<ResetPassword />} />}
         {<Route path="/additional-details" element={<AdditionalDetails />} />}
         {/* Admin */}

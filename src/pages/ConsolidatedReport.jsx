@@ -37,12 +37,27 @@ import * as XLSX from "xlsx";
 
 function ConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
+  const [prevConsolidatedReport, setPrevConsolidatedReport] = useState([]);
   const [departmentStatistics, setDepartmentStatistics] = useState([]);
   const [batch, setBatch] = useState(2025);
+  const [prevBatch, setPrevBatch] = useState(2024);
   const [department, setDepartment] = useState("");
   const [shouldRender, setShouldRender] = useState(true);
   const [xAxisAngle, setXAxisAngle] = useState(0); // Default angle
   const [total, setTotal] = useState({
+    supersetEnrolledCount: 0,
+    marquee: 0,
+    superDream: 0,
+    dream: 0,
+    daySharing: 0,
+    internship: 0,
+    totalOffers: 0,
+    totalCount: 0,
+    notPlaced: 0,
+    uniqueCount: 0,
+  });
+
+  const [prevTotal, setPrevTotal] = useState({
     supersetEnrolledCount: 0,
     marquee: 0,
     superDream: 0,
@@ -107,6 +122,30 @@ function ConsolidatedReport() {
       })
       .catch((error) => console.error("Fetch error:", error));
   }, [batch, department]);
+
+  useEffect(() => {
+    // Fetch consolidated report data
+    fetch(
+      `${api_url}server/get_consolidated_report.php?batch=${prevBatch}&department=${department}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setPrevConsolidatedReport(data.consolidatedReport);
+          calculatePrevTotal(data.consolidatedReport);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, [prevBatch, department]);
 
   useEffect(() => {
     //fetch dept statistics
@@ -177,6 +216,33 @@ function ConsolidatedReport() {
     setTotal(newTotal);
   };
 
+  const calculatePrevTotal = (data) => {
+    let newTotal = {
+      supersetEnrolledCount: 0,
+      marquee: 0,
+      superDream: 0,
+      dream: 0,
+      daySharing: 0,
+      internship: 0,
+      totalOffers: 0,
+      totalCount: 0,
+      notPlaced: 0,
+      uniqueCount: 0,
+    };
+
+    data.forEach((advisor) => {
+      Object.keys(advisor).forEach((key) => {
+        if (key !== "facultyAdvisorName") {
+          newTotal[key] += parseInt(advisor[key], 10);
+        }
+      });
+
+      newTotal.notPlaced += advisor.supersetEnrolledCount - advisor.uniqueCount;
+    });
+
+    setPrevTotal(newTotal);
+  };
+
   const calculateDepartmentTotal = (data) => {
     let newDepartmentTotal = {
       totalCount: 0,
@@ -220,6 +286,39 @@ function ConsolidatedReport() {
     { category: "Total", offers: total.totalOffers },
   ];
 
+  const offersCategoriesChartComparisionData = [
+    {
+      category: "Marquee",
+      currentOffers: total.marquee,
+      prevOffers: prevTotal.marquee,
+    },
+    {
+      category: "Super Dream",
+      currentOffers: total.superDream,
+      prevOffers: prevTotal.superDream,
+    },
+    {
+      category: "Dream",
+      currentOffers: total.dream,
+      prevOffers: prevTotal.dream,
+    },
+    {
+      category: "Day Sharing",
+      currentOffers: total.daySharing,
+      prevOffers: prevTotal.daySharing,
+    },
+    {
+      category: "Internship",
+      currentOffers: total.internship,
+      prevOffers: prevTotal.internship,
+    },
+    {
+      category: "Total",
+      currentOffers: total.totalOffers,
+      prevOffers: prevTotal.totalOffers,
+    },
+  ];
+
   const colors = [
     "#4f81bd",
     "#c0504d",
@@ -236,6 +335,10 @@ function ConsolidatedReport() {
 
   const handleBatchChange = (event) => {
     setBatch(event.target.value);
+  };
+
+  const handlePrevBatchChange = (event) => {
+    setPrevBatch(event.target.value);
   };
 
   const downloadExcel = (data) => {
@@ -683,6 +786,7 @@ function ConsolidatedReport() {
               apiUrl={`${api_url}/server/get_marquee_students.php?batch=${batch}&department=${department}`}
             />
           )}
+
           {/*Offer Summary*/}
           <div className="offer-summary-table">
             <h3>Offer Summary</h3>
@@ -787,6 +891,62 @@ function ConsolidatedReport() {
               </BarChart>
             </ResponsiveContainer>
           </div>
+
+          {/* offer under various categories comparision graph */}
+          <div className="offer-summary-graph" style={{ margin: "0 auto" }}>
+            <h3>Offers under various Categories comparision</h3>
+            <FormControl className="form-control">
+              <InputLabel htmlFor="batch">Compare To</InputLabel>{" "}
+              <Select
+                value={prevBatch}
+                onChange={handlePrevBatchChange}
+                style={{ color: "black", minWidth: 120, marginBottom: "20px" }} // Adjust minWidth as needed
+              >
+                {[...Array(2051 - 2022).keys()].map((year) => (
+                  <MenuItem
+                    key={2022 + year}
+                    value={2022 + year}
+                    style={{ color: "black" }}
+                  >
+                    {2022 + year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <ResponsiveContainer width="100%" height={500}>
+              <BarChart
+                data={offersCategoriesChartComparisionData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 100 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="category"
+                  angle={xAxisAngle}
+                  textAnchor="end"
+                  interval={0}
+                />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+
+                <Bar dataKey="currentOffers" fill={colors[0]} name={`${batch}`}>
+                  {offersCategoriesChartComparisionData.map((entry, index) => (
+                    <Cell key={`cell-current-${index}`} />
+                  ))}
+                </Bar>
+                <Bar
+                  dataKey="prevOffers"
+                  fill={colors[1]}
+                  name={`${prevBatch}`}
+                >
+                  {offersCategoriesChartComparisionData.map((entry, index) => (
+                    <Cell key={`cell-prev-${index}`} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
           {/* Student Statistics */}
           {shouldRender && (
             <StudentStatistics

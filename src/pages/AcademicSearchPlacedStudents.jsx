@@ -15,9 +15,7 @@ const useStyles = makeStyles({
 
 function AcademicSearchPlacedStudents() {
   const [searchValue, setSearchValue] = useState("");
-  // const [editRowsModel, setEditRowsModel] = useState({});
   const [studentData, setStudentData] = useState([]);
-  const [showSave, setShowSave] = useState(false);
   const [department, setDepartment] = useState("");
 
   const styles = useStyles();
@@ -60,42 +58,12 @@ function AcademicSearchPlacedStudents() {
       minWidth: 150,
       editable: false,
     },
-    // {
-    //   field: "specialization",
-    //   headerName: "Specialization",
-    //   flex: 1,
-    //   minWidth: 150,
-    //   editable: true,
-    // },
     {
       field: "department",
       headerName: "Department",
       flex: 1,
       minWidth: 150,
       editable: false,
-      renderEditCell: (params) => (
-        <TextField
-          select
-          SelectProps={{
-            native: true,
-          }}
-          value={params.value}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            params.api.setEditCellValue({
-              id: params.id,
-              field: params.field,
-              value: newValue,
-            });
-          }}
-          fullWidth
-        >
-          <option value="CINTEL">CINTEL</option>
-          <option value="DSBS">DSBS</option>
-          <option value="CTECH">CTECH</option>
-          <option value="NWC">NWC</option>
-        </TextField>
-      ),
     },
     {
       field: "specialization",
@@ -103,28 +71,6 @@ function AcademicSearchPlacedStudents() {
       flex: 1,
       minWidth: 150,
       editable: false,
-      renderEditCell: (params) => (
-        <TextField
-          select
-          SelectProps={{
-            native: true,
-          }}
-          value={params.value}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            params.api.setEditCellValue({
-              id: params.id,
-              field: params.field,
-              value: newValue,
-            });
-          }}
-          fullWidth
-        >
-          <option value="AI">AI</option>
-          <option value="AI/ML">AI/ML</option>
-          <option value="SWE">SWE</option>
-        </TextField>
-      ),
     },
     {
       field: "careerOption",
@@ -132,29 +78,13 @@ function AcademicSearchPlacedStudents() {
       flex: 1,
       minWidth: 150,
       editable: false,
-      renderEditCell: (params) => (
-        <TextField
-          select
-          SelectProps={{
-            native: true,
-          }}
-          value={params.value}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            params.api.setEditCellValue({
-              id: params.id,
-              field: params.field,
-              value: newValue,
-            });
-          }}
-          fullWidth
-        >
-          <option value="Superset Enrolled">Superset Enrolled</option>
-          <option value="Higher Studies">Higher Studies</option>
-          <option value="Entrepreneur">Entrepreneur</option>
-          <option value="Arrear/Detained">Arrear/Detained</option>
-        </TextField>
-      ),
+      renderEditCell: renderSelectCell([
+        "Superset Enrolled",
+        "Higher Studies",
+        "Entrepreneur",
+        "Arrear/Detained",
+        "None",
+      ]),
     },
     {
       field: "facultyAdvisorName",
@@ -183,30 +113,14 @@ function AcademicSearchPlacedStudents() {
       flex: 1,
       minWidth: 150,
       editable: false,
-      renderEditCell: (params) => (
-        <TextField
-          select
-          SelectProps={{
-            native: true,
-          }}
-          value={params.value}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            params.api.setEditCellValue({
-              id: params.id,
-              field: params.field,
-              value: newValue,
-            });
-          }}
-          fullWidth
-        >
-          <option value="Marquee">Marquee</option>
-          <option value="Super Dream">Super Dream</option>
-          <option value="Dream">Dream</option>
-          <option value="Day Sharing">Day Sharing</option>
-          <option value="Internship">Internship</option>
-        </TextField>
-      ),
+      renderEditCell: renderSelectCell([
+        "Marquee",
+        "Super Dream",
+        "Dream",
+        "Day Sharing",
+        "Internship",
+        "None",
+      ]),
     },
     {
       field: "package",
@@ -217,24 +131,41 @@ function AcademicSearchPlacedStudents() {
     },
   ];
 
+  function renderSelectCell(options) {
+    return (params) => (
+      <TextField
+        select
+        SelectProps={{ native: true }}
+        value={params.value}
+        onChange={(e) => {
+          const newValue = e.target.value;
+          params.api.setEditCellValue({
+            id: params.id,
+            field: params.field,
+            value: newValue,
+          });
+        }}
+        fullWidth
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </TextField>
+    );
+  }
+
   const handleSearch = (value) => {
     setSearchValue(value);
-
-    // Make a request to the PHP file to get student details based on the register number
     fetch(
       `${api_url}server/get_students_by_search.php?registerNumber=${value}&department=${department}`
     )
       .then((response) => response.json())
       .then((data) => {
-        if (Array.isArray(data.student)) {
-          const updatedStudentData = data.student.map((student, index) => ({
-            ...student,
-            id: `student-${index}`,
-          }));
-          setStudentData(updatedStudentData);
-        } else if (data.student) {
-          // If data.student is not an array but exists, convert it to an array
-          setStudentData([{ ...data.student, id: "student-0" }]);
+        if (data.status === "success") {
+          const studentData = formatStudentData(data.data);
+          setStudentData(studentData);
         } else {
           setStudentData([]);
         }
@@ -245,65 +176,32 @@ function AcademicSearchPlacedStudents() {
       });
   };
 
-  // const handleDoubleClick = (params) => {
-  //   const id = params.id;
-  //   const row = params.row;
-
-  //   const newModel = {
-  //     ...editRowsModel,
-  //     [id]: { ...row },
-  //   };
-  //   setEditRowsModel(newModel);
-
-  //   console.groupEnd();
-  // };
-
-  const handleDoubleClick = () => {
-    setShowSave(true);
-  };
-
-  const handleSave = () => {
-    // Create a copy of the studentData
-    const updatedData = [...studentData];
-
-    // Update the edited rows in the updatedData
-    // Object.keys(editRowsModel).forEach((id) => {
-    //   const editedRow = updatedData.find((student) => student.id === id);
-    //   if (editedRow) {
-    //     editedRow[Object.keys(editRowsModel[id])[0]] =
-    //       editRowsModel[id][Object.keys(editRowsModel[id])[0]].value;
-    //   }
-    // });
-
-    // Send the updated data to the server
-    updatedData.forEach((student) => {
-      fetch(`${api_url}server/update_student_details.php`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+  function formatStudentData(data) {
+    const student = data.student;
+    const placements = data.placements;
+    if (placements.length === 0) {
+      // If there are no placements, return the student data as a single entry
+      return [
+        {
+          ...student,
+          id: student.registerNumber, // Use the register number as the ID
+          companyName: "", // Add default values for editable fields
+          category: "",
+          package: "",
         },
-        body: JSON.stringify(student),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Student updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating student:", error);
-        });
-    });
-
-    setShowSave(false);
-
-    // // Update the state
-    // setStudentData(updatedData);
-    // setEditRowsModel({});
-  };
+      ];
+    }
+    // If there are placements, map the placements to include student data
+    return placements.map((placement) => ({
+      ...student,
+      ...placement,
+      id: placement.id, // Use the actual placement id
+    }));
+  }
 
   return (
     <div>
       <Navbar />
-
       <div className="edit-placed-container">
         <h1 className="edit-placed-title" style={{ textAlign: "center" }}>
           Search Placed Student Details in {department}
@@ -316,38 +214,22 @@ function AcademicSearchPlacedStudents() {
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
-      {studentData.map((student) => (
-        <div className="edit-placed-data-grid-container" key={student.id}>
+      {studentData.length !== 0 && (
+        <div className="edit-placed-data-grid-container">
           <DataGrid
             rows={studentData}
-            key={JSON.stringify(studentData)}
             columns={columns}
             checkboxSelection={false}
             disableSelectionOnClick
-            // editRowsModel={editRowsModel}
-            onCellDoubleClick={handleDoubleClick}
-            processRowUpdate={(updatedRow, originalRow) => {
-              const updatedData = studentData.map((student) => {
-                console.log("sfs", student);
-                if (student.id === originalRow.id) {
-                  return updatedRow;
-                }
-                return student;
-              });
-              setStudentData(updatedData);
-              console.log("Row updated:", updatedRow);
-            }}
-            onProcessRowUpdateError={(error) => {
-              console.log(error);
-            }}
             hideFooterPagination
           />
 
-          {showSave && <Button onClick={handleSave}>Save</Button>}
-
           <h5>Scroll horizontally to view all details | Only Viewing</h5>
         </div>
-      ))}
+      )}
+      {studentData.length === 0 && searchValue.length !== 0 && (
+        <h4 style={{ textAlign: "center" }}>No Student found</h4>
+      )}
     </div>
   );
 }

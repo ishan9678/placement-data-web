@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
 });
 
-function EditPlacedStudents() {
+function EditStudents() {
   const [searchValue, setSearchValue] = useState("");
   const [studentData, setStudentData] = useState([]);
   const [showSave, setShowSave] = useState(false);
@@ -176,6 +176,19 @@ function EditPlacedStudents() {
   function formatStudentData(data) {
     const student = data.student;
     const placements = data.placements;
+    if (placements.length === 0) {
+      // If there are no placements, return the student data as a single entry
+      return [
+        {
+          ...student,
+          id: student.registerNumber, // Use the register number as the ID
+          companyName: "", // Add default values for editable fields
+          category: "",
+          package: "",
+        },
+      ];
+    }
+    // If there are placements, map the placements to include student data
     return placements.map((placement) => ({
       ...student,
       ...placement,
@@ -248,20 +261,18 @@ function EditPlacedStudents() {
             hideFooterPagination
           />
 
-          {showSave && (
-            <Button onClick={handleSave} style={{ marginLeft: "152px" }}>
-              Save
-            </Button>
-          )}
+          {showSave && <Button onClick={handleSave}>Save</Button>}
 
           <h5>
-            Scroll horizontally to view all details | Double click to edit |
-            Only Career Option, Company Name, Category editable
+            Scroll horizontally to view all details | Double click to edit
           </h5>
         </div>
+      )}
+      {studentData.length === 0 && searchValue.length !== 0 && (
+        <h4 style={{ textAlign: "center" }}>No Student found</h4>
       )}
     </div>
   );
 }
 
-export default EditPlacedStudents;
+export default EditStudents;

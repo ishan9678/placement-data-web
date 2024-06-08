@@ -44,7 +44,6 @@ function ViewAllHigherStudiesStudents() {
   }, []);
 
   useEffect(() => {
-    // Fetch faculty advisors
     fetch(
       `${api_url}server/get_faculty_advisors.php?department=${department}`,
       {
@@ -64,10 +63,9 @@ function ViewAllHigherStudiesStudents() {
   }, [department]);
 
   const fetchHigherStudiesStudents = (advisor, department) => {
-    let url = `${api_url}server/get_higher_studies_student_details.php?`;
-    url += "department=" + department + "&";
+    let url = `${api_url}server/get_higher_studies_student_details.php?department=${department}`;
     if (advisor) {
-      url += `advisor=${advisor}`;
+      url += `&advisor=${advisor}`;
     }
     console.log(url);
 
@@ -100,10 +98,7 @@ function ViewAllHigherStudiesStudents() {
           Higher Studies Students In {department}
         </h2>
         <div style={{ display: "flex" }}>
-          <FormControl
-            className="view-all-placed-select"
-            // style={{ minWidth: 220 }}
-          >
+          <FormControl className="view-all-placed-select">
             <InputLabel>Select Faculty Advisor</InputLabel>
             <Select
               value={selectedAdvisor}
@@ -111,7 +106,6 @@ function ViewAllHigherStudiesStudents() {
               style={{ color: "black" }}
             >
               <MenuItem value="">
-                {" "}
                 <em style={{ color: "black" }}>None</em>
               </MenuItem>
               {facultyAdvisors.map((advisor) => (
@@ -157,15 +151,11 @@ function ViewAllHigherStudiesStudents() {
                   student.file ? (
                     <TableCell>
                       {student.file}
-                      <div
-                        style={{
-                          marginLeft: "10px",
-                        }}
-                      >
+                      <div style={{ marginLeft: "10px" }}>
                         <Button
                           variant="contained"
                           component="a"
-                          href={`${api_url}server/download.php?registerNumber=${student.registerNumber}`}
+                          href={`${api_url}server/download_alternative.php?registerNumber=${student.registerNumber}`}
                           download
                           size="small"
                         >

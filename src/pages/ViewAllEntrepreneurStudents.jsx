@@ -165,7 +165,7 @@ function ViewAllEntrepreneurStudents() {
                         <Button
                           variant="contained"
                           component="a"
-                          href={`${api_url}server/download.php?registerNumber=${student.registerNumber}`}
+                          href={`${api_url}server/download_alternative.php?registerNumber=${student.registerNumber}`}
                           download
                           size="small"
                         >

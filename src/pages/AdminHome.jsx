@@ -85,6 +85,12 @@ const AdminHome = () => {
                     imageUrl={EditStudentImage}
                     action={() => navigate("/create-viewer-login")}
                   />
+                  <OptionCard
+                    title="Add Faculty Assignment"
+                    description="Click here to add faculty advisor assignments"
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/add-faculty-assignments")}
+                  />
                 </div>
               </>
             ) : (

@@ -36,6 +36,7 @@ import ViewAllHigherStudiesStudents from "./pages/VIewAllHigherStudiesStudents";
 import ViewAllEntrepreneurStudents from "./pages/ViewAllEntrepreneurStudents";
 import SCOHome from "./pages/SCOHome";
 import SCOConsolidatedReport from "./pages/SCOConsolidatedReport";
+import AddFacultyAssignments from "./pages/AddFacultyAssisngments";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -216,6 +217,14 @@ const App = () => {
         {isLoggedIn && userRole === "Admin" && (
           <Route path="/create-viewer-login" element={<CreateViewerLogin />} />
         )}
+        {isLoggedIn && userRole === "Admin" && (
+          <Route
+            path="/add-faculty-assignments"
+            element={<AddFacultyAssignments />}
+          />
+        )}
+        {/* SCO */}
+
         {isLoggedIn && userRole === "SCO Placement Coordinator" && (
           <Route
             path="/sco-consolidated-report"

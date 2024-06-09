@@ -21,6 +21,7 @@ function ViewBranchPlacedStudents() {
   const [facultyAdvisors, setFacultyAdvisors] = useState([]);
   const [selectedAdvisor, setSelectedAdvisor] = useState("");
   const [branch, setBranch] = useState("");
+  const [batch, setBatch] = useState("");
 
   useEffect(() => {
     fetch(`${api_url}server/get_user_info.php`, {
@@ -31,6 +32,7 @@ function ViewBranchPlacedStudents() {
       .then((data) => {
         if (data.status === "success") {
           setBranch(data.specialization);
+          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }
@@ -40,7 +42,7 @@ function ViewBranchPlacedStudents() {
 
   useEffect(() => {
     // Fetch faculty advisors
-    fetch(`${api_url}server/get_branch_faculty_advisors.php`, {
+    fetch(`${api_url}server/get_branch_faculty_advisors.php?batch=${batch}`, {
       method: "GET",
       credentials: "include",
     })
@@ -53,13 +55,33 @@ function ViewBranchPlacedStudents() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, []);
+  }, [batch]);
 
   const handleAdvisorChange = (event) => {
     setSelectedAdvisor(event.target.value);
     // Fetch placed students of selected advisor
     fetch(
-      `${api_url}server/get_placed_student_details.php?advisor=${event.target.value}`,
+      `${api_url}server/get_placed_student_details.php?advisor=${event.target.value}&batch=${batch}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setPlacedStudents(data.students);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  };
+
+  const handleBatchChange = (event) => {
+    setBatch(event.target.value);
+    fetch(
+      `${api_url}server/get_placed_student_details.php?advisor=${selectedAdvisor}&batch=${event.target.value}`,
       {
         method: "GET",
         credentials: "include",
@@ -91,6 +113,28 @@ function ViewBranchPlacedStudents() {
                 style={{ color: "black" }}
               >
                 {advisor.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl className="form-control">
+          <InputLabel htmlFor="batch">Batch</InputLabel>{" "}
+          <Select
+            name="batch"
+            label="batch"
+            id="batch"
+            value={batch}
+            defaultValue={2025}
+            onChange={handleBatchChange}
+            style={{ color: "black", minWidth: 120, marginBottom: "20px" }} // Adjust minWidth as needed
+          >
+            {[...Array(2051 - 2022).keys()].map((year) => (
+              <MenuItem
+                key={2022 + year}
+                value={2022 + year}
+                style={{ color: "black" }}
+              >
+                {2022 + year}
               </MenuItem>
             ))}
           </Select>

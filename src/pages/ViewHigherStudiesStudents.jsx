@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -10,6 +10,7 @@ import {
   Button,
   Input,
 } from "@mui/material";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
@@ -18,6 +19,8 @@ function ViewHigherStudiesStudents() {
   const [higherStudiesStudents, setHigherStudiesStudents] = useState([]);
   const [facultyAdvisorName, setFacultyAdvisorName] = useState(null);
   const [fileStates, setFileStates] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [batch, setBatch] = useState("");
 
   useEffect(() => {
     fetch(`${api_url}server/get_user_info.php`, {
@@ -39,7 +42,7 @@ function ViewHigherStudiesStudents() {
     if (facultyAdvisorName) {
       // Fetch consolidated report data
       fetch(
-        `${api_url}server/get_higher_studies_student_details.php?advisor=${facultyAdvisorName}`,
+        `${api_url}server/get_higher_studies_student_details.php?advisor=${facultyAdvisorName}&batch=${batch}`,
         {
           method: "GET",
           credentials: "include",
@@ -62,7 +65,23 @@ function ViewHigherStudiesStudents() {
         })
         .catch((error) => console.error("Fetch error:", error));
     }
-  }, [facultyAdvisorName]);
+  }, [facultyAdvisorName, batch]);
+
+  useEffect(() => {
+    fetch(`${api_url}server/get_facultyadvisor_assignments.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setAssignments(data.assignments);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, []);
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -127,11 +146,29 @@ function ViewHigherStudiesStudents() {
       .catch((error) => console.error("Fetch error:", error));
   };
 
+  const handleBatchChange = useCallback((batch) => {
+    setBatch(batch);
+  }, []);
+
   return (
     <div style={{ maxHeight: "720px" }}>
       <Navbar />
       <div>
         <h2 style={{ textAlign: "center" }}>Higher Studies Student Details</h2>
+        <ButtonGroup
+          variant="contained"
+          disableElevation
+          aria-label="Basic button group"
+        >
+          {assignments.map((assignment, index) => (
+            <Button
+              key={index}
+              onClick={() => handleBatchChange(assignment.batch)}
+            >
+              {assignment.batch}
+            </Button>
+          ))}
+        </ButtonGroup>
         <TableContainer className="fa-students-table" component={Paper}>
           <Table>
             <TableHead>

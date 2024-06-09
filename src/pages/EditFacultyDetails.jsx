@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { makeStyles } from "@material-ui/core/styles";
-
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
@@ -17,6 +16,7 @@ function EditFacultyDetails() {
   const [searchValue, setSearchValue] = useState("");
   const [facultyData, setFacultyData] = useState([]);
   const [showSave, setShowSave] = useState(false);
+  const [updatedRow, setUpdatedRow] = useState(null);
 
   const styles = useStyles();
 
@@ -33,14 +33,14 @@ function EditFacultyDetails() {
       headerName: "Employee ID",
       flex: 1,
       minWidth: 150,
-      editable: true,
+      editable: false,
     },
     {
       field: "role",
       headerName: "Role",
       flex: 1,
       minWidth: 150,
-      editable: true,
+      editable: false,
     },
     {
       field: "specialization",
@@ -51,9 +51,7 @@ function EditFacultyDetails() {
       renderEditCell: (params) => (
         <TextField
           select
-          SelectProps={{
-            native: true,
-          }}
+          SelectProps={{ native: true }}
           value={params.value}
           onChange={(e) => {
             const newValue = e.target.value;
@@ -80,7 +78,7 @@ function EditFacultyDetails() {
     },
     {
       field: "email_id",
-      headerName: "Email Adress",
+      headerName: "Email Address",
       flex: 1,
       minWidth: 150,
       editable: true,
@@ -89,10 +87,9 @@ function EditFacultyDetails() {
       field: "section",
       headerName: "Section",
       flex: 1,
-      minWidth: 150,
+      minWidth: 100,
       editable: true,
     },
-
     {
       field: "additional_specialization",
       headerName: "Additional Specialization",
@@ -102,9 +99,7 @@ function EditFacultyDetails() {
       renderEditCell: (params) => (
         <TextField
           select
-          SelectProps={{
-            native: true,
-          }}
+          SelectProps={{ native: true }}
           value={params.value}
           onChange={(e) => {
             const newValue = e.target.value;
@@ -127,7 +122,6 @@ function EditFacultyDetails() {
   const handleSearch = (value) => {
     setSearchValue(value);
 
-    // Make a request to the PHP file to get student details based on the register number
     fetch(`${api_url}server/get_faculties_by_search.php?employee_id=${value}`)
       .then((response) => response.json())
       .then((data) => {
@@ -138,14 +132,13 @@ function EditFacultyDetails() {
           }));
           setFacultyData(updatedFacultyData);
         } else if (data.faculty) {
-          // If data.student is not an array but exists, convert it to an array
           setFacultyData([{ ...data.faculty, id: "faculty-0" }]);
         } else {
           setFacultyData([]);
         }
       })
       .catch((error) => {
-        console.error("Error fetching student details:", error);
+        console.error("Error fetching faculty details:", error);
         setFacultyData([]);
       });
   };
@@ -155,27 +148,44 @@ function EditFacultyDetails() {
   };
 
   const handleSave = () => {
-    const updatedData = [...facultyData];
+    if (!updatedRow) {
+      console.error("No row has been updated");
+      return;
+    }
 
-    // Send the updated data to the server
-    updatedData.forEach((faculty) => {
-      fetch(`${api_url}server/update_faculty_details.php`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(faculty),
+    const updateType =
+      updatedRow._id !== "user" ? "facultyadvisor_assignments" : "users";
+    fetch(`${api_url}server/update_faculty_details.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...updatedRow, update_type: updateType }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Faculty updated successfully");
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Faculty updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating faculty:", error);
-        });
-    });
+      .catch((error) => {
+        console.error("Error updating faculty:", error);
+      });
 
     setShowSave(false);
+  };
+
+  const handleProcessRowUpdate = (updatedRow, originalRow) => {
+    const updatedData = facultyData.map((faculty) => {
+      if (faculty.id === originalRow.id) {
+        return updatedRow;
+      }
+      return faculty;
+    });
+    setFacultyData(updatedData);
+
+    // Keep track of the updated row
+    setUpdatedRow(updatedRow);
+
+    return updatedRow;
   };
 
   return (
@@ -193,39 +203,39 @@ function EditFacultyDetails() {
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
-      {facultyData.map((faculty) => (
-        <div className="edit-placed-data-grid-container" key={faculty.id}>
+      {facultyData.length !== 0 && (
+        <div className="edit-placed-data-grid-container">
           <DataGrid
             rows={facultyData}
-            key={JSON.stringify(facultyData)}
             columns={columns}
             checkboxSelection={false}
             disableSelectionOnClick
             onCellDoubleClick={handleDoubleClick}
-            processRowUpdate={(updatedRow, originalRow) => {
-              const updatedData = facultyData.map((student) => {
-                console.log("sfs", student);
-                if (student.id === originalRow.id) {
-                  return updatedRow;
-                }
-                return student;
-              });
-              setFacultyData(updatedData);
-              console.log("Row updated:", updatedRow);
-            }}
+            processRowUpdate={handleProcessRowUpdate}
             onProcessRowUpdateError={(error) => {
               console.log(error);
             }}
             hideFooterPagination
           />
-
-          {showSave && <Button onClick={handleSave}>Save</Button>}
-
+          {showSave && (
+            <Button
+              style={{
+                marginTop: "16px",
+                marginLeft: "50%",
+                transform: "translateX(-50%)",
+              }}
+              variant="contained"
+              color="primary"
+              onClick={handleSave}
+            >
+              Save
+            </Button>
+          )}
           <h5>
             Scroll horizontally to view all details | Double click to edit
           </h5>
         </div>
-      ))}
+      )}
     </div>
   );
 }

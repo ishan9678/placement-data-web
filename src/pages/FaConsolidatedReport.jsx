@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -20,6 +20,7 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import SalaryCategorisation from "../components/SalaryCategorisation";
 import MarqueeStudents from "../components/MarqueeStudents";
 import StudentStatistics from "../components/StudentStatistics";
@@ -35,6 +36,9 @@ function FaConsolidatedReport() {
   const [section, setSection] = useState(null);
   const [consolidatedReport, setConsolidatedReport] = useState([]);
   const [xAxisAngle, setXAxisAngle] = useState(0); // Default angle
+  const [assignments, setAssignments] = useState([]);
+  const [batch, setBatch] = useState("");
+  const [shouldRender, setShouldRender] = useState(true);
   const [total, setTotal] = useState({
     supersetEnrolledCount: 0,
     marquee: 0,
@@ -58,6 +62,7 @@ function FaConsolidatedReport() {
         if (data.status === "success") {
           setSpecialization(data.specialization);
           setSection(data.section);
+          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }
@@ -67,7 +72,7 @@ function FaConsolidatedReport() {
 
   useEffect(() => {
     // Fetch consolidated report data
-    fetch(`${api_url}server/get_fa_consolidated_report.php`, {
+    fetch(`${api_url}server/get_fa_consolidated_report.php?batch=${batch}`, {
       method: "GET",
       credentials: "include",
     })
@@ -76,6 +81,26 @@ function FaConsolidatedReport() {
         if (data.status === "success") {
           setConsolidatedReport(data.consolidatedReport);
           calculateTotal(data.consolidatedReport);
+          setShouldRender(false);
+          setTimeout(() => {
+            setShouldRender(true);
+          }, 0);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  }, [batch]);
+
+  useEffect(() => {
+    fetch(`${api_url}server/get_facultyadvisor_assignments.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setAssignments(data.assignments);
         } else {
           console.error("Error:", data.message);
         }
@@ -149,6 +174,12 @@ function FaConsolidatedReport() {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  const handleBatchChange = useCallback((assignment) => {
+    setBatch(assignment.batch);
+    setSpecialization(assignment.specialization);
+    setSection(assignment.section);
+  }, []);
 
   const downloadExcel = (data) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -247,9 +278,20 @@ function FaConsolidatedReport() {
       >
         <div>
           <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
-            Consolidated Report for {specialization} {section} section
+            Consolidated Report for {specialization} {section} section ({batch})
           </h2>
           {/* table 1 */}
+          <ButtonGroup
+            variant="contained"
+            disableElevation
+            aria-label="Basic button group"
+          >
+            {assignments.map((assignment, index) => (
+              <Button key={index} onClick={() => handleBatchChange(assignment)}>
+                {assignment.batch}
+              </Button>
+            ))}
+          </ButtonGroup>
           <TableContainer component={Paper}>
             <Button
               variant="contained"
@@ -410,14 +452,18 @@ function FaConsolidatedReport() {
           </TableContainer>
 
           {/*Salary*/}
-          <SalaryCategorisation
-            apiUrl={`${api_url}server/get_fa_salary_categorisation.php`}
-          />
+          {shouldRender && (
+            <SalaryCategorisation
+              apiUrl={`${api_url}server/get_fa_salary_categorisation.php?batch=${batch}`}
+            />
+          )}
 
           {/*Marquee*/}
-          <MarqueeStudents
-            apiUrl={`${api_url}/server/get_fa_marquee_students.php`}
-          />
+          {shouldRender && (
+            <MarqueeStudents
+              apiUrl={`${api_url}/server/get_fa_marquee_students.php?batch=${batch}`}
+            />
+          )}
 
           {/*Offer Summary*/}
           <div className="offer-summary-table">
@@ -489,7 +535,7 @@ function FaConsolidatedReport() {
           </div>
 
           {/* Offers under various categories Graph*/}
-          <div className="offer-summary-graph">
+          <div className="offer-summary-graph" style={{ margin: "0 auto" }}>
             <h3>Offers under various Categories</h3>
             <ResponsiveContainer width="100%" height={500}>
               <BarChart
@@ -525,13 +571,17 @@ function FaConsolidatedReport() {
             </ResponsiveContainer>
           </div>
           {/* Student Statistics */}
-          <StudentStatistics
-            apiUrl={`${api_url}server/get_fa_student_statistics.php`}
-          />
+          {shouldRender && (
+            <StudentStatistics
+              apiUrl={`${api_url}server/get_fa_student_statistics.php?batch=${batch}`}
+            />
+          )}
           {/*Salary Statistics */}
-          <SalaryStatistics
-            apiUrl={`${api_url}server/get_fa_salary_statistics.php`}
-          />
+          {shouldRender && (
+            <SalaryStatistics
+              apiUrl={`${api_url}server/get_fa_salary_statistics.php?batch=${batch}`}
+            />
+          )}
           <Button
             className="print-button"
             style={{

@@ -543,7 +543,7 @@ function BranchConsolidatedReport() {
         </div>
 
         {/* Offers under various categories Graph*/}
-        <div className="offer-summary-graph">
+        <div className="offer-summary-graph" style={{ margin: "0 auto" }}>
           <h3>Offers under various Categories</h3>
           <ResponsiveContainer width="100%" height={500}>
             <BarChart

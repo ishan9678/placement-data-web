@@ -19,30 +19,38 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-import api_url from "../apiconfig";
 import "../styles/pages.css";
 import * as XLSX from "xlsx";
 
 function SalaryCategorisation({ apiUrl }) {
   const [salaryCategorisation, setSalaryCategorisation] = useState({});
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log("Fetching data from API:", apiUrl);
     fetch(apiUrl, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
-        setSalaryCategorisation(data);
+        console.log("Data fetched from API:", data);
+        if (typeof data === "object" && data !== null && !Array.isArray(data)) {
+          setSalaryCategorisation(data);
+        } else {
+          throw new Error("Invalid data format received from API");
+        }
       })
-      .catch((error) => console.error("Fetch error:", error));
-  }, []);
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        setError(error);
+      });
+  }, [apiUrl]);
 
   const getTotalCount = () => {
     let totalCount = 0;
     Object.values(salaryCategorisation).forEach((count) => {
       totalCount += parseInt(count);
-      console.log("total count", totalCount);
     });
     return totalCount;
   };
@@ -85,6 +93,10 @@ function SalaryCategorisation({ apiUrl }) {
 
     return data;
   };
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div
@@ -136,7 +148,7 @@ function SalaryCategorisation({ apiUrl }) {
         </Table>
       </TableContainer>
 
-      {/* Graph*/}
+      {/* Graph */}
       <div className="salary-categorisation-graph">
         <h3>Salary Categorisation Bar Chart (in percentages)</h3>
         <ResponsiveContainer width="100%" height={500}>
@@ -158,7 +170,6 @@ function SalaryCategorisation({ apiUrl }) {
                 position: "insideLeft",
               }}
             />
-
             <Tooltip />
             <Bar dataKey="percentage">
               {dataForBarChart.map((entry, index) => (

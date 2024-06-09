@@ -26,6 +26,7 @@ function ViewAllPlacedStudents() {
   const [role, setRole] = useState();
   const [isTempAcc, setIsTempAcc] = useState(0);
   const [department, setDepartment] = useState("");
+  const [batch, setBatch] = useState("");
 
   useEffect(() => {
     fetch(`${api_url}server/get_user_info.php`, {
@@ -38,6 +39,7 @@ function ViewAllPlacedStudents() {
           setRole(data.role);
           setIsTempAcc(data.isTempAcc);
           setDepartment(data.department);
+          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }
@@ -48,7 +50,7 @@ function ViewAllPlacedStudents() {
   useEffect(() => {
     // Fetch faculty advisors
     fetch(
-      `${api_url}server/get_faculty_advisors.php?department=${department}`,
+      `${api_url}server/get_faculty_advisors.php?department=${department}&batch=${batch}`,
       {
         method: "GET",
         credentials: "include",
@@ -65,10 +67,13 @@ function ViewAllPlacedStudents() {
       .catch((error) => console.error("Fetch error:", error));
 
     // Fetch companies
-    fetch(`${api_url}server/get_companies.php?department=${department}`, {
-      method: "GET",
-      credentials: "include",
-    })
+    fetch(
+      `${api_url}server/get_companies.php?department=${department}&batch=${batch}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
@@ -78,11 +83,12 @@ function ViewAllPlacedStudents() {
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, [department]);
+  }, [department, batch]);
 
-  const fetchPlacedStudents = (advisor, company) => {
+  const fetchPlacedStudents = (advisor, company, batch) => {
     let url = `${api_url}server/get_placed_student_details.php?`;
     url += "department=" + department + "&";
+    url += "batch=" + batch + "&";
     if (advisor) {
       url += `advisor=${advisor}`;
       if (company) {
@@ -110,13 +116,19 @@ function ViewAllPlacedStudents() {
   const handleAdvisorChange = (event) => {
     const advisor = event.target.value;
     setSelectedAdvisor(advisor);
-    fetchPlacedStudents(advisor, selectedCompany);
+    fetchPlacedStudents(advisor, selectedCompany, batch);
   };
 
   const handleCompanyChange = (event) => {
     const company = event.target.value;
     setSelectedCompany(company);
-    fetchPlacedStudents(selectedAdvisor, company); // Pass selectedAdvisor here
+    fetchPlacedStudents(selectedAdvisor, company, batch); // Pass selectedAdvisor here
+  };
+
+  const handleBatchChange = (event) => {
+    setBatch(event.target.value);
+    const batch = event.target.value;
+    fetchPlacedStudents(selectedAdvisor, selectedCompany, batch);
   };
 
   return (
@@ -171,6 +183,29 @@ function ViewAllPlacedStudents() {
                   style={{ color: "black" }}
                 >
                   {company}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl className="form-control">
+            <InputLabel htmlFor="batch">Batch</InputLabel>{" "}
+            <Select
+              name="batch"
+              label="batch"
+              id="batch"
+              value={batch}
+              defaultValue={2025}
+              onChange={handleBatchChange}
+              style={{ color: "black", minWidth: 120, marginBottom: "20px" }} // Adjust minWidth as needed
+            >
+              {[...Array(2051 - 2022).keys()].map((year) => (
+                <MenuItem
+                  key={2022 + year}
+                  value={2022 + year}
+                  style={{ color: "black" }}
+                >
+                  {2022 + year}
                 </MenuItem>
               ))}
             </Select>

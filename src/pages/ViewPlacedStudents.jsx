@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -10,6 +10,7 @@ import {
   Button,
   Input,
 } from "@mui/material";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
@@ -18,6 +19,8 @@ function ViewPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
   const [facultyAdvisorName, setFacultyAdvisorName] = useState(null);
   const [fileStates, setFileStates] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [batch, setBatch] = useState("");
 
   useEffect(() => {
     fetch(`${api_url}server/get_user_info.php`, {
@@ -36,32 +39,49 @@ function ViewPlacedStudents() {
   }, []);
 
   useEffect(() => {
-    // Fetch consolidated report data
-    fetch(`${api_url}server/get_placed_student_details.php`, {
+    fetch(`${api_url}server/get_facultyadvisor_assignments.php`, {
       method: "GET",
       credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          const filteredStudents = data.students.filter(
-            (student) => student.facultyAdvisor === facultyAdvisorName
-          );
-          setPlacedStudents(filteredStudents);
-
-          // Set initial state for fileStates after placedStudents is populated
-          const initialFileStates = filteredStudents.map((student) => ({
-            selected: !!student.file,
-            fileName: student.file ? student.file.split("/")[1] : "",
-            file: null,
-          }));
-          setFileStates(initialFileStates);
+          setAssignments(data.assignments);
         } else {
           console.error("Error:", data.message);
         }
       })
       .catch((error) => console.error("Fetch error:", error));
-  }, [facultyAdvisorName]);
+  }, []);
+
+  useEffect(() => {
+    if (facultyAdvisorName && batch) {
+      fetch(`${api_url}server/get_placed_student_details.php?batch=${batch}`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            const filteredStudents = data.students.filter(
+              (student) => student.facultyAdvisor === facultyAdvisorName
+            );
+            setPlacedStudents(filteredStudents);
+
+            // Set initial state for fileStates after placedStudents is populated
+            const initialFileStates = filteredStudents.map((student) => ({
+              selected: !!student.file,
+              fileName: student.file ? student.file.split("/")[1] : "",
+              file: null,
+            }));
+            setFileStates(initialFileStates);
+          } else {
+            console.error("Error:", data.message);
+          }
+        })
+        .catch((error) => console.error("Fetch error:", error));
+    }
+  }, [facultyAdvisorName, batch]);
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -105,7 +125,6 @@ function ViewPlacedStudents() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          console.log("Sfoisjfeoijf");
           // Update the fileStates state to reflect the deletion
           const newFileStates = [...fileStates];
           const index = placedStudents.findIndex(
@@ -124,11 +143,29 @@ function ViewPlacedStudents() {
       .catch((error) => console.error("Fetch error:", error));
   };
 
+  const handleBatchChange = useCallback((batch) => {
+    setBatch(batch);
+  }, []);
+
   return (
     <div style={{ maxHeight: "720px" }}>
       <Navbar />
       <div>
         <h2 style={{ textAlign: "center" }}>Placed Students Details</h2>
+        <ButtonGroup
+          variant="contained"
+          disableElevation
+          aria-label="Basic button group"
+        >
+          {assignments.map((assignment, index) => (
+            <Button
+              key={index}
+              onClick={() => handleBatchChange(assignment.batch)}
+            >
+              {assignment.batch}
+            </Button>
+          ))}
+        </ButtonGroup>
         <TableContainer className="fa-students-table" component={Paper}>
           <Table>
             <TableHead>
@@ -156,7 +193,7 @@ function ViewPlacedStudents() {
                   <TableCell>{student.facultyAdvisor}</TableCell>
                   <TableCell>{student.batch}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    {fileStates[index].selected ? (
+                    {fileStates[index]?.selected ? (
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <span>{fileStates[index].fileName}</span>

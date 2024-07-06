@@ -39,8 +39,8 @@ function ConsolidatedReport() {
   const [consolidatedReport, setConsolidatedReport] = useState([]);
   const [prevConsolidatedReport, setPrevConsolidatedReport] = useState([]);
   const [departmentStatistics, setDepartmentStatistics] = useState([]);
-  const [batch, setBatch] = useState(2025);
-  const [prevBatch, setPrevBatch] = useState(2024);
+  const [batch, setBatch] = useState(0);
+  const [prevBatch, setPrevBatch] = useState(0);
   const [department, setDepartment] = useState("");
   const [shouldRender, setShouldRender] = useState(true);
   const [xAxisAngle, setXAxisAngle] = useState(0); // Default angle
@@ -91,6 +91,7 @@ function ConsolidatedReport() {
       .then((data) => {
         if (data.status === "success") {
           setBatch(data.batch);
+          setPrevBatch(data.batch - 1);
           setDepartment(data.department);
         } else {
           console.error("Error:", data.message);
@@ -335,6 +336,7 @@ function ConsolidatedReport() {
 
   const handleBatchChange = (event) => {
     setBatch(event.target.value);
+    setPrevBatch(event.target.value - 1);
   };
 
   const handlePrevBatchChange = (event) => {
@@ -362,7 +364,7 @@ function ConsolidatedReport() {
         Internship: stats.internship,
         "Total Offers": stats.totalOffers,
         "Percentage %":
-          ((stats.totalOffers / stats.supersetEnrolledCount) * 100).toFixed(2) +
+          ((stats.uniqueCount / stats.supersetEnrolledCount) * 100).toFixed(2) +
           "%",
         "Unique Offers": stats.uniqueCount,
       })
@@ -717,7 +719,7 @@ function ConsolidatedReport() {
                       <TableCell>{stats.totalOffers}</TableCell>
                       <TableCell>
                         {(
-                          (stats.totalOffers / stats.supersetEnrolledCount) *
+                          (stats.uniqueCount / stats.supersetEnrolledCount) *
                           100
                         ).toFixed(2)}
                         %
@@ -760,7 +762,7 @@ function ConsolidatedReport() {
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {(
-                      (departmentStatisticsTotal.totalOffers /
+                      (departmentStatisticsTotal.uniqueCount /
                         departmentStatisticsTotal.supersetEnrolledCount) *
                       100
                     ).toFixed(2)}

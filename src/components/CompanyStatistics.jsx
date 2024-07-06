@@ -30,14 +30,16 @@ function CompanyStatistics({ apiUrl }) {
   // Calculate total row
   const totalRow = {};
   Object.values(statistics).forEach((company) => {
-    Object.entries(company.specializations).forEach(
-      ([specialization, count]) => {
-        if (!totalRow[specialization]) {
-          totalRow[specialization] = 0;
+    Object.values(company).forEach((categoryData) => {
+      Object.entries(categoryData.specializations).forEach(
+        ([specialization, count]) => {
+          if (!totalRow[specialization]) {
+            totalRow[specialization] = 0;
+          }
+          totalRow[specialization] += parseInt(count);
         }
-        totalRow[specialization] += parseInt(count);
-      }
-    );
+      );
+    });
   });
 
   const specializations = Object.keys(totalRow);
@@ -53,25 +55,27 @@ function CompanyStatistics({ apiUrl }) {
     const data = [];
 
     // Extract individual company data
-    Object.entries(statistics).forEach(([companyName, companyData]) => {
-      const rowData = {
-        "Company Name": companyName,
-        Category: companyData.category,
-        ...companyData.specializations,
-        Total: Object.values(companyData.specializations).reduce(
-          (sum, count) => sum + parseInt(count, 10),
-          0
-        ),
-      };
+    Object.entries(statistics).forEach(([companyName, categories]) => {
+      Object.entries(categories).forEach(([category, details]) => {
+        const rowData = {
+          "Company Name": companyName,
+          Category: category,
+          ...details.specializations,
+          Total: Object.values(details.specializations).reduce(
+            (sum, count) => sum + parseInt(count, 10),
+            0
+          ),
+        };
 
-      // Ensure all specializations are included
-      specializations.forEach((spec) => {
-        if (!rowData[spec]) {
-          rowData[spec] = 0;
-        }
+        // Ensure all specializations are included
+        specializations.forEach((spec) => {
+          if (!rowData[spec]) {
+            rowData[spec] = 0;
+          }
+        });
+
+        data.push(rowData);
       });
-
-      data.push(rowData);
     });
 
     // Extract total row data
@@ -116,23 +120,25 @@ function CompanyStatistics({ apiUrl }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.entries(statistics).map(([companyName, companyData]) => (
-              <TableRow key={companyName}>
-                <TableCell>{companyName}</TableCell>
-                <TableCell>{companyData.category}</TableCell>
-                {specializations.map((spec) => (
-                  <TableCell key={spec}>
-                    {companyData.specializations[spec] || 0}
+            {Object.entries(statistics).map(([companyName, categories]) =>
+              Object.entries(categories).map(([category, details]) => (
+                <TableRow key={`${companyName}-${category}`}>
+                  <TableCell>{companyName}</TableCell>
+                  <TableCell>{category}</TableCell>
+                  {specializations.map((spec) => (
+                    <TableCell key={spec}>
+                      {details.specializations[spec] || 0}
+                    </TableCell>
+                  ))}
+                  <TableCell>
+                    {Object.values(details.specializations).reduce(
+                      (sum, count) => sum + parseInt(count),
+                      0
+                    )}
                   </TableCell>
-                ))}
-                <TableCell>
-                  {Object.values(companyData.specializations).reduce(
-                    (sum, count) => sum + parseInt(count),
-                    0
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
+                </TableRow>
+              ))
+            )}
             <TableRow
               sx={{
                 backgroundColor: "#f0f0f0",

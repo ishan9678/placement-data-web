@@ -119,7 +119,10 @@ function SalaryStatistics({ apiUrl }) {
               </TableCell>
               <TableCell></TableCell>
               <TableCell align="center" sx={{ fontWeight: "800" }}>
-                {statistics.avg_package} LPA
+                {statistics.avg_package !== undefined
+                  ? statistics.avg_package.toFixed(2)
+                  : "0.00"}{" "}
+                LPA
               </TableCell>
               <TableCell align="center">-</TableCell>
             </TableRow>

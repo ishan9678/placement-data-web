@@ -16,6 +16,7 @@ import {
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
+import * as XLSX from "xlsx";
 
 function ViewAllPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
@@ -131,10 +132,20 @@ function ViewAllPlacedStudents() {
     fetchPlacedStudents(selectedAdvisor, selectedCompany, batch);
   };
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "PlacedStudents.xlsx");
+  };
+
   return (
     <div>
       <Navbar />
-      <div className="view-all-placed-container" style={{ maxHeight: "500px" }}>
+      <div
+        className="view-all-placed-container"
+        style={{ maxHeight: "500px", maxWidth: "1200px" }}
+      >
         <h2 className="view-all-placed-title">
           Placed Students In {department}
         </h2>
@@ -279,6 +290,16 @@ function ViewAllPlacedStudents() {
               </TableRow>
             </TableBody>
           </Table>
+          {placedStudents.length > 0 && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => downloadExcel(placedStudents)}
+              style={{ backgroundColor: "#10793F", margin: "2rem" }}
+            >
+              Download As Excel
+            </Button>
+          )}
         </TableContainer>
       </div>
     </div>

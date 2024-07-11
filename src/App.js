@@ -141,18 +141,22 @@ const App = () => {
             element={<AddPlacedStudents />}
           />
         )}
-        {isLoggedIn && userRole === "Placement Coordinator" && (
-          <Route
-            path="/view-all-higher-studies-student-details"
-            element={<ViewAllHigherStudiesStudents />}
-          />
-        )}
-        {isLoggedIn && userRole === "Placement Coordinator" && (
-          <Route
-            path="/view-all-entrepreneur-student-details"
-            element={<ViewAllEntrepreneurStudents />}
-          />
-        )}
+        {isLoggedIn &&
+          (userRole === "Placement Coordinator" ||
+            userRole === "Academic Advisor") && (
+            <Route
+              path="/view-all-higher-studies-student-details"
+              element={<ViewAllHigherStudiesStudents />}
+            />
+          )}
+        {isLoggedIn &&
+          (userRole === "Placement Coordinator" ||
+            userRole === "Academic Advisor") && (
+            <Route
+              path="/view-all-entrepreneur-student-details"
+              element={<ViewAllEntrepreneurStudents />}
+            />
+          )}
         {isLoggedIn && userRole === "Academic Advisor" && (
           <Route
             path="/academic-consolidated-report"

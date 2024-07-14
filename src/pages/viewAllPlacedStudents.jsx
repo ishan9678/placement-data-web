@@ -27,7 +27,7 @@ function ViewAllPlacedStudents() {
   const [role, setRole] = useState();
   const [isTempAcc, setIsTempAcc] = useState(0);
   const [department, setDepartment] = useState("");
-  const [batch, setBatch] = useState("");
+  const [batch, setBatch] = useState("2025");
 
   useEffect(() => {
     fetch(`${api_url}server/get_user_info.php`, {
@@ -40,7 +40,6 @@ function ViewAllPlacedStudents() {
           setRole(data.role);
           setIsTempAcc(data.isTempAcc);
           setDepartment(data.department);
-          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }

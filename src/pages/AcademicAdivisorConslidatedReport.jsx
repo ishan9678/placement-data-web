@@ -610,7 +610,7 @@ function AcademicAdvisorConsolidatedReport() {
                       <TableCell>{stats.totalOffers}</TableCell>
                       <TableCell>
                         {(
-                          (stats.totalOffers / stats.supersetEnrolledCount) *
+                          (stats.uniqueCount / stats.supersetEnrolledCount) *
                           100
                         ).toFixed(2)}
                         %
@@ -653,7 +653,7 @@ function AcademicAdvisorConsolidatedReport() {
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {(
-                      (departmentStatisticsTotal.totalOffers /
+                      (departmentStatisticsTotal.uniqueCount /
                         departmentStatisticsTotal.supersetEnrolledCount) *
                       100
                     ).toFixed(2)}
@@ -748,7 +748,7 @@ function AcademicAdvisorConsolidatedReport() {
             </TableContainer>
           </div>
           {/* Offers under various categories Graph*/}
-          <div className="offer-summary-graph">
+          <div className="offer-summary-graph" style={{ margin: "0 auto" }}>
             <h3>Offers under various Categories</h3>
             <ResponsiveContainer width="100%" height={500}>
               <BarChart

@@ -608,7 +608,7 @@ function SCOConsolidatedReport() {
                       <TableCell>{stats.totalOffers}</TableCell>
                       <TableCell>
                         {(
-                          (stats.totalOffers / stats.supersetEnrolledCount) *
+                          (stats.uniqueCount / stats.supersetEnrolledCount) *
                           100
                         ).toFixed(2)}
                         %
@@ -651,7 +651,7 @@ function SCOConsolidatedReport() {
                   </TableCell>
                   <TableCell sx={{ fontWeight: "800" }}>
                     {(
-                      (departmentStatisticsTotal.totalOffers /
+                      (departmentStatisticsTotal.uniqueCount /
                         departmentStatisticsTotal.supersetEnrolledCount) *
                       100
                     ).toFixed(2)}

@@ -164,9 +164,9 @@ function ViewAllHigherStudiesStudents() {
                 <TableCell>Section</TableCell>
                 <TableCell>Faculty Advisor</TableCell>
                 <TableCell>Batch</TableCell>
-                {(role === "Placement Coordinator" || isTempAcc === 1) && (
-                  <TableCell>File</TableCell>
-                )}
+                {(role === "Placement Coordinator" ||
+                  role === "Academic Advisor" ||
+                  isTempAcc === 1) && <TableCell>File</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -177,7 +177,9 @@ function ViewAllHigherStudiesStudents() {
                   <TableCell>{student.section}</TableCell>
                   <TableCell>{student.facultyAdvisorName}</TableCell>
                   <TableCell>{student.batch}</TableCell>
-                  {(role === "Placement Coordinator" || isTempAcc === 1) &&
+                  {(role === "Placement Coordinator" ||
+                    role === "Academic Advisor" ||
+                    isTempAcc === 1) &&
                   student.file ? (
                     <TableCell>
                       {student.file}

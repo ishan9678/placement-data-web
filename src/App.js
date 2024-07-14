@@ -75,6 +75,12 @@ const App = () => {
   });
 
   const renderHomeRoute = () => {
+    console.log(
+      "Rendering home route with userRole:",
+      userRole,
+      "and tempAcc:",
+      tempAcc
+    );
     if (userRole === "Admin") {
       return <AdminHome />;
     } else if (userRole === "Faculty Advisor") {
@@ -87,12 +93,12 @@ const App = () => {
       return <AcademicAdvisorHome />;
     } else if (userRole === "Program Coordinator") {
       return <ProgramCoordinatorHome />;
-    } else if (tempAcc === "1") {
+    } else if (tempAcc === 1) {
       return <HodHome />;
     } else if (userRole === "SCO Placement Coordinator") {
       return <SCOHome />;
     }
-    return null;
+    return <div>Role not recognized. Please contact support.</div>;
   };
 
   return (
@@ -129,7 +135,7 @@ const App = () => {
           (userRole === "HOD" ||
             userRole === "Placement Coordinator" ||
             userRole === "Academic Advisor" ||
-            tempAcc === "1") && (
+            tempAcc === 1) && (
             <Route
               path="/view-all-placed-student-details"
               element={<ViewAllPlacedStudents />}
@@ -191,7 +197,7 @@ const App = () => {
           (userRole === "HOD" ||
             userRole === "Placement Coordinator" ||
             userRole === "Academic Advisor" ||
-            tempAcc === "1") && (
+            tempAcc === 1) && (
             <Route
               path="/consolidated-report"
               element={<ConsolidatedReport />}

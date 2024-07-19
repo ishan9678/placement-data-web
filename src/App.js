@@ -37,6 +37,8 @@ import ViewAllEntrepreneurStudents from "./pages/ViewAllEntrepreneurStudents";
 import SCOHome from "./pages/SCOHome";
 import SCOConsolidatedReport from "./pages/SCOConsolidatedReport";
 import AddFacultyAssignments from "./pages/AddFacultyAssisngments";
+import ViewAllUnPlacedStudents from "./pages/ViewAllUnplacedStudents";
+import ViewBranchUnpalcedStudents from "./pages/ViewBranchUnplacedStudents";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -131,6 +133,12 @@ const App = () => {
             element={<ViewBranchPlacedStudents />}
           />
         )}
+        {isLoggedIn && userRole === "Program Coordinator" && (
+          <Route
+            path="/view-branch-unplaced-students"
+            element={<ViewBranchUnpalcedStudents />}
+          />
+        )}
         {isLoggedIn &&
           (userRole === "HOD" ||
             userRole === "Placement Coordinator" ||
@@ -139,6 +147,16 @@ const App = () => {
             <Route
               path="/view-all-placed-student-details"
               element={<ViewAllPlacedStudents />}
+            />
+          )}
+        {isLoggedIn &&
+          (userRole === "HOD" ||
+            userRole === "Placement Coordinator" ||
+            userRole === "Academic Advisor" ||
+            tempAcc === 1) && (
+            <Route
+              path="/view-all-unplaced-student-details"
+              element={<ViewAllUnPlacedStudents />}
             />
           )}
         {isLoggedIn && userRole === "Placement Coordinator" && (

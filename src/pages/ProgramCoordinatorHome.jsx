@@ -56,6 +56,12 @@ const ProgramCoordinatorHome = () => {
                     action={() => navigate("/view-branch-placed-students")}
                   />
                   <OptionCard
+                    title="View Unplaced Student Details"
+                    description="Click here to view details of Not placed students."
+                    imageUrl={EditStudentImage}
+                    action={() => navigate("/view-branch-unplaced-students")}
+                  />
+                  <OptionCard
                     title="View Consolidated Report"
                     description="Click here to view the consolidated report."
                     imageUrl={EditStudentImage}

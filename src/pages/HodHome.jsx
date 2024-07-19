@@ -60,6 +60,12 @@ const HodHome = () => {
                   action={() => navigate("/view-all-placed-student-details")}
                 />
                 <OptionCard
+                  title="View Not Placed Student Details"
+                  description="Click here to view details of unplaced students."
+                  imageUrl={EditStudentImage}
+                  action={() => navigate("/view-all-unplaced-student-details")}
+                />
+                <OptionCard
                   title="View Consolidated Report"
                   description="Click here to view the consolidated report."
                   imageUrl={EditStudentImage}

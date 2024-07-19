@@ -67,6 +67,14 @@ const PlacementCoordinatorHome = () => {
                     action={() => navigate("/view-all-placed-student-details")}
                   />
                   <OptionCard
+                    title="View Not Placed Student Details"
+                    description="Click here to view details of unplaced students."
+                    imageUrl={EditStudentImage}
+                    action={() =>
+                      navigate("/view-all-unplaced-student-details")
+                    }
+                  />
+                  <OptionCard
                     title="View Higher Studies Students"
                     description="Click here to view details of higher studies students"
                     imageUrl={EditStudentImage}

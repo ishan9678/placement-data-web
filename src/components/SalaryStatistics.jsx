@@ -126,6 +126,19 @@ function SalaryStatistics({ apiUrl }) {
               </TableCell>
               <TableCell align="center">-</TableCell>
             </TableRow>
+            <TableRow sx={{ backgroundColor: "#f0f0f0" }}>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "800" }}>
+                Average Salary (Unique Offers)
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell align="center" sx={{ fontWeight: "800" }}>
+                {statistics.unique_avg_package !== undefined
+                  ? statistics.unique_avg_package.toFixed(2)
+                  : "0.00"}{" "}
+                LPA
+              </TableCell>
+              <TableCell align="center">-</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

@@ -14,6 +14,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
+import * as XLSX from "xlsx";
 
 function ViewHigherStudiesStudents() {
   const [higherStudiesStudents, setHigherStudiesStudents] = useState([]);
@@ -31,6 +32,7 @@ function ViewHigherStudiesStudents() {
       .then((data) => {
         if (data.status === "success") {
           setFacultyAdvisorName(data.name);
+          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }
@@ -39,32 +41,29 @@ function ViewHigherStudiesStudents() {
   }, []);
 
   useEffect(() => {
-    if (facultyAdvisorName) {
-      // Fetch consolidated report data
-      fetch(
-        `${api_url}server/get_higher_studies_student_details.php?advisor=${facultyAdvisorName}&batch=${batch}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            setHigherStudiesStudents(data.students);
+    fetch(
+      `${api_url}server/get_higher_studies_student_details.php?advisor=${facultyAdvisorName}&batch=${batch}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setHigherStudiesStudents(data.students);
 
-            const initialFileStates = data.students.map((student) => ({
-              selected: !!student.file,
-              fileName: student.file ? student.file.split("/")[1] : "",
-              file: null,
-            }));
-            setFileStates(initialFileStates);
-          } else {
-            console.error("Error:", data.message);
-          }
-        })
-        .catch((error) => console.error("Fetch error:", error));
-    }
+          const initialFileStates = data.students.map((student) => ({
+            selected: !!student.file,
+            fileName: student.file ? student.file.split("/")[1] : "",
+            file: null,
+          }));
+          setFileStates(initialFileStates);
+        } else {
+          console.error("Error:", data.message);
+        }
+      })
+      .catch((error) => console.error("Fetch error:", error));
   }, [facultyAdvisorName, batch]);
 
   useEffect(() => {
@@ -150,8 +149,15 @@ function ViewHigherStudiesStudents() {
     setBatch(batch);
   }, []);
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "HigherStudiesStudents.xlsx");
+  };
+
   return (
-    <div style={{ maxHeight: "720px" }}>
+    <div style={{ maxHeight: "500px", maxWidth: "1200px" }}>
       <Navbar />
       <div>
         <h2 style={{ textAlign: "center" }}>Higher Studies Student Details</h2>
@@ -248,6 +254,16 @@ function ViewHigherStudiesStudents() {
               ))}
             </TableBody>
           </Table>
+          {higherStudiesStudents.length > 0 && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => downloadExcel(higherStudiesStudents)}
+              style={{ backgroundColor: "#10793F", margin: "2rem" }}
+            >
+              Download As Excel
+            </Button>
+          )}
         </TableContainer>
       </div>
     </div>

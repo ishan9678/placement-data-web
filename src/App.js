@@ -39,6 +39,7 @@ import SCOConsolidatedReport from "./pages/SCOConsolidatedReport";
 import AddFacultyAssignments from "./pages/AddFacultyAssisngments";
 import ViewAllUnPlacedStudents from "./pages/ViewAllUnplacedStudents";
 import ViewBranchUnpalcedStudents from "./pages/ViewBranchUnplacedStudents";
+import ViewUnplacedStudents from "./pages/ViewUnplacedStudents";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -113,6 +114,12 @@ const App = () => {
           <Route
             path="/view-placed-student-details"
             element={<ViewPlacedStudents />}
+          />
+        )}
+        {isLoggedIn && userRole === "Faculty Advisor" && (
+          <Route
+            path="/view-unplaced-student-details"
+            element={<ViewUnplacedStudents />}
           />
         )}
         {isLoggedIn && userRole === "Faculty Advisor" && (

@@ -14,6 +14,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
+import * as XLSX from "xlsx";
 
 function ViewPlacedStudents() {
   const [placedStudents, setPlacedStudents] = useState([]);
@@ -55,7 +56,7 @@ function ViewPlacedStudents() {
   }, []);
 
   useEffect(() => {
-    if (facultyAdvisorName && batch) {
+    if (facultyAdvisorName) {
       fetch(`${api_url}server/get_placed_student_details.php?batch=${batch}`, {
         method: "GET",
         credentials: "include",
@@ -147,8 +148,15 @@ function ViewPlacedStudents() {
     setBatch(batch);
   }, []);
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "PlacedStudents.xlsx");
+  };
+
   return (
-    <div style={{ maxHeight: "720px" }}>
+    <div style={{ maxHeight: "500px", maxWidth: "1200px" }}>
       <Navbar />
       <div>
         <h2 style={{ textAlign: "center" }}>Placed Students Details</h2>
@@ -247,6 +255,16 @@ function ViewPlacedStudents() {
               ))}
             </TableBody>
           </Table>
+          {placedStudents.length > 0 && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => downloadExcel(placedStudents)}
+              style={{ backgroundColor: "#10793F", margin: "2rem" }}
+            >
+              Download As Excel
+            </Button>
+          )}
         </TableContainer>
       </div>
     </div>

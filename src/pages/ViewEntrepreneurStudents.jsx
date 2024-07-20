@@ -14,6 +14,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Navbar from "../components/Navbar";
 import api_url from "../apiconfig";
 import "../styles/pages.css";
+import * as XLSX from "xlsx";
 
 function ViewEntrepreneurStudents() {
   const [entrepreneurStudents, setEntrepreneurStudents] = useState([]);
@@ -31,6 +32,7 @@ function ViewEntrepreneurStudents() {
       .then((data) => {
         if (data.status === "success") {
           setFacultyAdvisorName(data.name);
+          setBatch(data.batch);
         } else {
           console.error("Error:", data.message);
         }
@@ -150,8 +152,15 @@ function ViewEntrepreneurStudents() {
     setBatch(batch);
   }, []);
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "EntreprenuerStudents.xlsx");
+  };
+
   return (
-    <div style={{ maxHeight: "720px" }}>
+    <div style={{ maxHeight: "500px", maxWidth: "1200px" }}>
       <Navbar />
       <div>
         <h2 style={{ textAlign: "center" }}>Entrepreneur Student Details</h2>
@@ -248,6 +257,16 @@ function ViewEntrepreneurStudents() {
               ))}
             </TableBody>
           </Table>
+          {entrepreneurStudents.length > 0 && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => downloadExcel(entrepreneurStudents)}
+              style={{ backgroundColor: "#10793F", margin: "2rem" }}
+            >
+              Download As Excel
+            </Button>
+          )}
         </TableContainer>
       </div>
     </div>

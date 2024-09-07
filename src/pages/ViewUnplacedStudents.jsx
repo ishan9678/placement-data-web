@@ -87,7 +87,7 @@ function ViewUnplacedStudents() {
     <div style={{ maxHeight: "500px", maxWidth: "1200px" }}>
       <Navbar />
       <div>
-        <h2 style={{ textAlign: "center" }}>Placed Students Details</h2>
+        <h2 style={{ textAlign: "center" }}>Not Placed Students Details</h2>
         <ButtonGroup
           variant="contained"
           disableElevation

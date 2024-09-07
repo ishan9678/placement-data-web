@@ -99,6 +99,7 @@ function ViewPlacedStudents() {
     // Add the file to the form data
     formData.append("file", file);
     formData.append("registerNumber", placedStudents[index].registerNumber);
+    formData.append("companyName", placedStudents[index].companyName); 
 
     // Send the file to the server
     fetch(`${api_url}server/upload.php`, {

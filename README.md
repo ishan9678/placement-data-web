@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+# Placement Data Portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Website**: [Placement Data Portal](https://placementdata.in)  
+**GitHub Repositories**:  
+- [Front-end Repository (React)](https://github.com/ishan9678/placement-data-web)
+- [Back-end Repository](https://github.com/ishan9678/placement-data-server)
 
-## Available Scripts
+## Project Overview
+Developed for the **CINTEL Department at SRM University**, this portal manages placement data, offering detailed reports and insights. It features role-based access with specific functionality for admins, coordinators, faculty, and department heads.
 
-In the project directory, you can run:
+## Tech Stack
+- **Front-end**: React
+- **Back-end**: PHP, MySQL
+- **Version Control**: Git (GitHub)
 
-### `npm start`
+# Video demo (placement coordinaor role)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+  
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+https://github.com/user-attachments/assets/389dd2b6-546c-4c33-8c4f-65302122fa48
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Key Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### **Admin Portal**:
+- Approve users (restricts login until approved)
+- Add students via Excel upload
+- Edit student and faculty details
+- Create temporary viewer accounts
 
-### `npm run eject`
+### **Placement Coordinator**:
+- Upload placed students via Excel
+- View placed/unplaced students filtered by faculty, company, or year
+- View higher studies and entrepreneur students
+- Search and edit placed student details
+- Access consolidated reports for the whole department (toggle by year)
+- Permissions limited to students of the same department
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### **Faculty Advisor**:
+- View and upload offer letters for placed students in their class
+- View higher studies and entrepreneur student details
+- Access consolidated reports for their class
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### **Academic Advisor**:
+- View/search placed, unplaced, higher studies, and entrepreneur students (no edit access)
+- Access consolidated reports of the department for specific years
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### **Program Coordinator**:
+- Same access as Academic Advisor but limited to students in the program/course
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### **HOD (Head of Department)**:
+- Same as Placement Coordinator but without the ability to add or edit placed student data
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## **Consolidated Report** Features:
+- Bar charts, year-over-year comparisons, company statistics, salary details, salary categorisation, student statistics etc.
+- Exportable to Excel, downloadable as a PDF

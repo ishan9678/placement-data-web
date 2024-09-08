@@ -13,7 +13,7 @@ Developed for the **CINTEL Department at SRM University**, this portal manages p
 - **Back-end**: PHP, MySQL
 - **Version Control**: Git (GitHub)
 
-# Video demo (placement coordinaor role)
+## Video demo (placement coordinaor role)
 
   
 

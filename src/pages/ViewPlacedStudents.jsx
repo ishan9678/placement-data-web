@@ -115,14 +115,14 @@ function ViewPlacedStudents() {
       });
   };
 
-  const handleDeleteFile = (registerNumber) => {
+  const handleDeleteFile = (registerNumber, companyName) => {
     // Send a request to delete the file
     fetch(`${api_url}server/delete_file.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ registerNumber }),
+      body: JSON.stringify({ registerNumber, companyName }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -222,7 +222,7 @@ function ViewPlacedStudents() {
                               variant="contained"
                               size="small"
                               onClick={() =>
-                                handleDeleteFile(student.registerNumber)
+                                handleDeleteFile(student.registerNumber, student.companyName)
                               }
                               style={{ backgroundColor: "red" }}
                             >

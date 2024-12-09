@@ -96,6 +96,12 @@ const PlacementCoordinatorHome = () => {
                     imageUrl={EditStudentImage}
                     action={() => navigate("/edit-placed-students")}
                   />
+                    <OptionCard
+                        title="View Career Option Consolidated Report"
+                        description="Click here to view the career option consolidated report."
+                        imageUrl={EditStudentImage}
+                        action={() => navigate("/career-option-consolidated-report")}
+                    />
                   <OptionCard
                     title="View Consolidated Report"
                     description="Click here to view the consolidated report."

@@ -40,9 +40,11 @@ import AddFacultyAssignments from "./pages/AddFacultyAssisngments";
 import ViewAllUnPlacedStudents from "./pages/ViewAllUnplacedStudents";
 import ViewBranchUnpalcedStudents from "./pages/ViewBranchUnplacedStudents";
 import ViewUnplacedStudents from "./pages/ViewUnplacedStudents";
+import {CareerOptionConsolidatedReport} from "./pages/CareerOptionConsolidatedReport";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
+
 
 const App = () => {
   const [userRole, setUserRole] = useState(null);
@@ -217,6 +219,12 @@ const App = () => {
             path="/edit-placed-students"
             element={<EditPlacedStudents />}
           />
+        )}
+        {isLoggedIn && userRole === "Placement Coordinator" && (
+            <Route
+                path="/career-option-consolidated-report"
+                element={<CareerOptionConsolidatedReport />}
+            />
         )}
         {isLoggedIn &&
           (userRole === "HOD" ||

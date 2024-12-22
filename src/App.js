@@ -176,7 +176,7 @@ const App = () => {
         )}
         {isLoggedIn &&
           (userRole === "Placement Coordinator" ||
-            userRole === "Academic Advisor") && (
+            userRole === "Academic Advisor" || userRole === "HOD") && (
             <Route
               path="/view-all-higher-studies-student-details"
               element={<ViewAllHigherStudiesStudents />}
@@ -184,7 +184,7 @@ const App = () => {
           )}
         {isLoggedIn &&
           (userRole === "Placement Coordinator" ||
-            userRole === "Academic Advisor") && (
+            userRole === "Academic Advisor" || userRole === "HOD") && (
             <Route
               path="/view-all-entrepreneur-student-details"
               element={<ViewAllEntrepreneurStudents />}

@@ -80,6 +80,11 @@ function AddFacultyAssignments() {
           <option value="AI">AI</option>
           <option value="AI/ML">AI/ML</option>
           <option value="SWE">SWE</option>
+          <option value="Int. M.Tech. in AI">Int. M.Tech. in AI</option>
+          <option value="Int. M.Tech. CSE w/s in CC">Int. M.Tech. CSE w/s in CC</option>
+          <option value="M. Tech. AI">M. Tech. AI</option>
+          <option value="M. Tech. AI&DS">M. Tech. AI&DS</option>
+          <option value="NA">NA</option>
         </TextField>
       ),
     },

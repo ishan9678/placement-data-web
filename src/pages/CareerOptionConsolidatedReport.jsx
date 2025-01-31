@@ -87,9 +87,7 @@ export const CareerOptionConsolidatedReport = () => {
                             id="batch"
                             value={batch}
                             defaultValue={2025}
-                            onChange={() => {
-                                handleBatchChange();
-                            }}
+                            onChange={handleBatchChange}
                             style={{ color: "black", minWidth: 120, marginBottom: "20px" }} // Adjust minWidth as needed
                         >
                             {[...Array(2051 - 2022).keys()].map((year) => (

@@ -397,6 +397,7 @@ function ConsolidatedReport() {
     const data = consolidatedReport.map((advisor) => ({
       "Name of Faculty Advisor": advisor.facultyAdvisorName,
       Section: advisor.facultyAdvisorSection,
+      Specialization: advisor.facultyAdvisorSpecialization,
       "Superset Enrolled": advisor.supersetEnrolledCount,
       Marquee: advisor.marquee,
       "Super Dream": advisor.superDream,
@@ -428,6 +429,7 @@ function ConsolidatedReport() {
     const data = consolidatedReport.map((advisor) => ({
       "Name of Faculty Advisor": advisor.facultyAdvisorName,
       Section: advisor.facultyAdvisorSection,
+      Specialization: advisor.facultyAdvisorSpecialization,
       "Class Strength": advisor.totalCount,
       "Placement Enrolled": advisor.supersetEnrolledCount,
       "Placed Students": advisor.uniqueCount,
@@ -532,6 +534,7 @@ function ConsolidatedReport() {
                 >
                   <TableCell>Name of Faculty Advisor</TableCell>
                   <TableCell>Section</TableCell>
+                  <TableCell>Specialization</TableCell>
                   <TableCell>Superset Enrolled</TableCell>
                   <TableCell>Marquee</TableCell>
                   <TableCell>Super Dream</TableCell>
@@ -547,6 +550,7 @@ function ConsolidatedReport() {
                   <TableRow key={advisor.facultyAdvisorName}>
                     <TableCell>{advisor.facultyAdvisorName}</TableCell>
                     <TableCell>{advisor.facultyAdvisorSection}</TableCell>
+                    <TableCell>{advisor.facultyAdvisorSpecialization}</TableCell>
                     <TableCell>{advisor.supersetEnrolledCount}</TableCell>
                     <TableCell>{advisor.marquee}</TableCell>
                     <TableCell>{advisor.superDream}</TableCell>
@@ -613,6 +617,7 @@ function ConsolidatedReport() {
                 >
                   <TableCell>Name of Faculty Advisor</TableCell>
                   <TableCell>Section</TableCell>
+                  <TableCell>Specialization</TableCell>
                   <TableCell>Class Strength</TableCell>
                   <TableCell>Placement Enrolled</TableCell>
                   <TableCell>Placed Students</TableCell>
@@ -625,6 +630,7 @@ function ConsolidatedReport() {
                   <TableRow key={advisor.facultyAdvisorName}>
                     <TableCell>{advisor.facultyAdvisorName}</TableCell>
                     <TableCell>{advisor.facultyAdvisorSection}</TableCell>
+                    <TableCell>{advisor.facultyAdvisorSpecialization}</TableCell>
                     <TableCell>{advisor.totalCount}</TableCell>
                     <TableCell>{advisor.supersetEnrolledCount}</TableCell>
                     <TableCell>{advisor.uniqueCount}</TableCell>

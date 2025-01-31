@@ -41,6 +41,7 @@ import ViewAllUnPlacedStudents from "./pages/ViewAllUnplacedStudents";
 import ViewBranchUnpalcedStudents from "./pages/ViewBranchUnplacedStudents";
 import ViewUnplacedStudents from "./pages/ViewUnplacedStudents";
 import {CareerOptionConsolidatedReport} from "./pages/CareerOptionConsolidatedReport";
+import Footer from "./components/Footer";
 
 const clientId =
   "932313425561-p4j1t2603ledibugd4m20nl0a3c7hu43.apps.googleusercontent.com";
@@ -107,6 +108,7 @@ const App = () => {
   };
 
   return (
+    <>
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -276,6 +278,8 @@ const App = () => {
         )}
       </Routes>
     </Router>
+    <Footer />
+    </>
   );
 };
 
